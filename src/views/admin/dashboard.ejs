@@ -1,0 +1,80 @@
+<%- include('../partials/header') %>
+
+<div class="admin-page">
+  <h1>Admin Dashboard</h1>
+  
+  <div class="admin-nav">
+    <a href="/admin" class="active">Dashboard</a>
+    <a href="/admin/users">Users</a>
+    <a href="/admin/wikis">Wikis</a>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-value"><%= stats.users %></span>
+      <span class="stat-label">Users</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value"><%= stats.wikis %></span>
+      <span class="stat-label">Wikis</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value"><%= stats.pages %></span>
+      <span class="stat-label">Pages</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value"><%= stats.revisions %></span>
+      <span class="stat-label">Revisions</span>
+    </div>
+  </div>
+
+  <div class="admin-sections">
+    <section>
+      <h2>Recent Wikis</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Owner</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% recentWikis.forEach(wiki => { %>
+            <tr>
+              <td><a href="/w/<%= wiki.slug %>"><%= wiki.name %></a></td>
+              <td><%= wiki.owner_name %></td>
+              <td><%= new Date(wiki.created_at).toLocaleDateString() %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Recent Users</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Admin</th>
+            <th>Joined</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% recentUsers.forEach(user => { %>
+            <tr>
+              <td><%= user.username %></td>
+              <td><%= user.email %></td>
+              <td><%= user.is_admin ? '✓' : '' %></td>
+              <td><%= new Date(user.created_at).toLocaleDateString() %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

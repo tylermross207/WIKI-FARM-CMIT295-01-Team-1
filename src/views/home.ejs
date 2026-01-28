@@ -1,0 +1,38 @@
+<%- include('partials/header') %>
+
+<div class="home-hero">
+  <h1>🌱 Welcome to Wiki Farm</h1>
+  <p>Create and host your own wikis. Share knowledge with the world.</p>
+  <% if (!user) { %>
+    <div class="hero-actions">
+      <a href="/auth/register" class="btn btn-primary btn-lg">Get Started</a>
+      <a href="/auth/login" class="btn btn-lg">Login</a>
+    </div>
+  <% } else { %>
+    <div class="hero-actions">
+      <a href="/w/create" class="btn btn-primary btn-lg">Create a Wiki</a>
+    </div>
+  <% } %>
+</div>
+
+<section class="wiki-list">
+  <h2>Public Wikis</h2>
+  <% if (wikis.length === 0) { %>
+    <p class="empty-state">No public wikis yet. Be the first to create one!</p>
+  <% } else { %>
+    <div class="wiki-grid">
+      <% wikis.forEach(wiki => { %>
+        <a href="/w/<%= wiki.slug %>" class="wiki-card">
+          <h3><%= wiki.name %></h3>
+          <p class="wiki-description"><%= wiki.description || 'No description' %></p>
+          <div class="wiki-meta">
+            <span>📄 <%= wiki.page_count %> pages</span>
+            <span>👤 <%= wiki.owner_name %></span>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+  <% } %>
+</section>
+
+<%- include('partials/footer') %>

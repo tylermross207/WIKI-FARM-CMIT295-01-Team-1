@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title + ' - ' : '' %>Wiki Farm</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="main-header">
+    <nav class="container">
+      <a href="/" class="logo">🌱 Wiki Farm</a>
+      <div class="nav-links">
+        <% if (typeof user !== 'undefined' && user) { %>
+          <a href="/w/create" class="btn btn-primary">Create Wiki</a>
+          <% if (user.is_admin) { %>
+            <a href="/admin">Admin</a>
+          <% } %>
+          <span class="user-info">
+            👤 <%= user.username %>
+            <a href="/auth/logout" class="btn btn-sm">Logout</a>
+          </span>
+        <% } else { %>
+          <a href="/auth/login" class="btn">Login</a>
+          <a href="/auth/register" class="btn btn-primary">Register</a>
+        <% } %>
+      </div>
+    </nav>
+  </header>
+  <main class="container">

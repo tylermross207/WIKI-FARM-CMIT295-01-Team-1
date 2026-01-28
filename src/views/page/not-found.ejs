@@ -1,0 +1,21 @@
+<%- include('../partials/header') %>
+
+<div class="wiki-header">
+  <h1><a href="/w/<%= wiki.slug %>"><%= wiki.name %></a></h1>
+</div>
+
+<div class="not-found-page">
+  <h2>Page Not Found</h2>
+  <p>The page "<strong><%= pageSlug %></strong>" doesn't exist yet.</p>
+  
+  <% if (canEdit) { %>
+    <p>Would you like to create it?</p>
+    <a href="/w/<%= wiki.slug %>/<%= pageSlug %>/edit" class="btn btn-primary">Create This Page</a>
+  <% } else { %>
+    <p>You don't have permission to create new pages in this wiki.</p>
+  <% } %>
+  
+  <a href="/w/<%= wiki.slug %>" class="btn">Back to Wiki Home</a>
+</div>
+
+<%- include('../partials/footer') %>

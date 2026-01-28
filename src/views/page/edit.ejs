@@ -1,0 +1,42 @@
+<%- include('../partials/header') %>
+
+<div class="wiki-header">
+  <h1><a href="/w/<%= wiki.slug %>"><%= wiki.name %></a></h1>
+</div>
+
+<div class="edit-page">
+  <h2><%= isNew ? 'Create New Page' : 'Edit: ' + page.title %></h2>
+  
+  <% if (error) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>
+
+  <form method="POST" action="/w/<%= wiki.slug %>/<%= page.slug %>/edit" class="page-form">
+    <div class="form-group">
+      <label for="title">Page Title</label>
+      <input type="text" id="title" name="title" value="<%= page.title %>" required>
+    </div>
+
+    <div class="form-group">
+      <label for="content">Content (Markdown)</label>
+      <div class="editor-help">
+        <span>Supports Markdown: **bold**, *italic*, # headings, [links](url), etc.</span>
+      </div>
+      <textarea id="content" name="content" rows="20" class="code-editor"><%= page.content %></textarea>
+    </div>
+
+    <% if (!isNew) { %>
+      <div class="form-group">
+        <label for="edit_summary">Edit Summary (optional)</label>
+        <input type="text" id="edit_summary" name="edit_summary" placeholder="Briefly describe your changes">
+      </div>
+    <% } %>
+
+    <div class="form-actions">
+      <a href="/w/<%= wiki.slug %>/<%= isNew ? '' : page.slug %>" class="btn">Cancel</a>
+      <button type="submit" class="btn btn-primary"><%= isNew ? 'Create Page' : 'Save Changes' %></button>
+    </div>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>

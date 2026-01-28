@@ -1,0 +1,99 @@
+<%- include('../partials/header') %>
+
+<div class="form-page">
+  <h1>Wiki Settings: <%= wiki.name %></h1>
+  
+  <% if (error) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>
+  <% if (success) { %>
+    <div class="alert alert-success"><%= success %></div>
+  <% } %>
+
+  <form method="POST" action="/w/<%= wiki.slug %>/settings" class="wiki-form">
+    <div class="form-group">
+      <label for="name">Wiki Name</label>
+      <input type="text" id="name" name="name" value="<%= wiki.name %>" required>
+    </div>
+
+    <div class="form-group">
+      <label>URL Slug</label>
+      <input type="text" value="<%= wiki.slug %>" disabled>
+      <small>The slug cannot be changed after creation</small>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" name="description" rows="3"><%= wiki.description %></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox-label">
+        <input type="checkbox" name="is_public" <%= wiki.is_public ? 'checked' : '' %>>
+        <span>Public wiki</span>
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox-label">
+        <input type="checkbox" name="allow_public_edit" <%= wiki.allow_public_edit ? 'checked' : '' %>>
+        <span>Allow anyone to edit</span>
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <a href="/w/<%= wiki.slug %>" class="btn">Back to Wiki</a>
+      <button type="submit" class="btn btn-primary">Save Settings</button>
+    </div>
+  </form>
+
+  <hr>
+
+  <section class="members-section">
+    <h2>Wiki Members</h2>
+    
+    <% if (members.length === 0) { %>
+      <p class="empty-state">No members added yet.</p>
+    <% } else { %>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Added</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% members.forEach(member => { %>
+            <tr>
+              <td><%= member.username %></td>
+              <td><%= member.role %></td>
+              <td><%= new Date(member.created_at).toLocaleDateString() %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+
+    <form method="POST" action="/w/<%= wiki.slug %>/members" class="inline-form">
+      <input type="text" name="username" placeholder="Username" required>
+      <select name="role">
+        <option value="editor">Editor</option>
+        <option value="viewer">Viewer</option>
+      </select>
+      <button type="submit" class="btn">Add Member</button>
+    </form>
+  </section>
+
+  <hr>
+
+  <section class="danger-zone">
+    <h2>Danger Zone</h2>
+    <form method="POST" action="/w/<%= wiki.slug %>/delete" 
+          onsubmit="return confirm('Are you sure you want to delete this wiki? This cannot be undone!')">
+      <button type="submit" class="btn btn-danger">Delete Wiki</button>
+    </form>
+  </section>
+</div>
+
+<%- include('../partials/footer') %>

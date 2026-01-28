@@ -1,0 +1,39 @@
+<%- include('../partials/header') %>
+
+<div class="wiki-header">
+  <h1><a href="/w/<%= wiki.slug %>"><%= wiki.name %></a></h1>
+  <nav class="wiki-nav">
+    <a href="/w/<%= wiki.slug %>/home">Home</a>
+    <a href="/w/<%= wiki.slug %>/pages">All Pages</a>
+    <% if (user && (wiki.owner_id === user.id || user.is_admin)) { %>
+      <a href="/w/<%= wiki.slug %>/settings">Settings</a>
+    <% } %>
+  </nav>
+</div>
+
+<article class="page-content">
+  <header class="page-header">
+    <h1><%= page.title %></h1>
+    <div class="page-actions">
+      <% if (canEdit) { %>
+        <a href="/w/<%= wiki.slug %>/<%= page.slug %>/edit" class="btn btn-primary">Edit</a>
+      <% } %>
+      <a href="/w/<%= wiki.slug %>/<%= page.slug %>/history" class="btn">History</a>
+    </div>
+  </header>
+
+  <div class="page-body markdown-content">
+    <%- content %>
+  </div>
+
+  <footer class="page-footer">
+    <p>
+      Created by <strong><%= page.author %></strong> on <%= new Date(page.created_at).toLocaleDateString() %>
+      <% if (page.last_editor) { %>
+        | Last edited by <strong><%= page.last_editor %></strong> on <%= new Date(page.updated_at).toLocaleDateString() %>
+      <% } %>
+    </p>
+  </footer>
+</article>
+
+<%- include('../partials/footer') %>

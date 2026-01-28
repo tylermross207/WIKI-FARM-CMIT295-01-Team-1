@@ -1,0 +1,46 @@
+<%- include('../partials/header') %>
+
+<div class="wiki-header">
+  <h1><%= wiki.name %></h1>
+  <nav class="wiki-nav">
+    <a href="/w/<%= wiki.slug %>/home">Home</a>
+    <a href="/w/<%= wiki.slug %>/pages" class="active">All Pages</a>
+    <% if (user && (wiki.owner_id === user.id || user.is_admin)) { %>
+      <a href="/w/<%= wiki.slug %>/settings">Settings</a>
+    <% } %>
+  </nav>
+</div>
+
+<div class="pages-list">
+  <div class="list-header">
+    <h2>All Pages (<%= pages.length %>)</h2>
+    <a href="/w/<%= wiki.slug %>/new-page/edit" class="btn btn-primary">New Page</a>
+  </div>
+
+  <% if (pages.length === 0) { %>
+    <p class="empty-state">No pages in this wiki yet.</p>
+  <% } else { %>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Last Updated</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% pages.forEach(page => { %>
+          <tr>
+            <td>
+              <a href="/w/<%= wiki.slug %>/<%= page.slug %>"><%= page.title %></a>
+            </td>
+            <td><%= page.author %></td>
+            <td><%= new Date(page.updated_at).toLocaleDateString() %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

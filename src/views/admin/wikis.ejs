@@ -1,0 +1,46 @@
+<%- include('../partials/header') %>
+
+<div class="admin-page">
+  <h1>Manage Wikis</h1>
+  
+  <div class="admin-nav">
+    <a href="/admin">Dashboard</a>
+    <a href="/admin/users">Users</a>
+    <a href="/admin/wikis" class="active">Wikis</a>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Slug</th>
+        <th>Owner</th>
+        <th>Pages</th>
+        <th>Public</th>
+        <th>Created</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% wikis.forEach(wiki => { %>
+        <tr>
+          <td><a href="/w/<%= wiki.slug %>"><%= wiki.name %></a></td>
+          <td><%= wiki.slug %></td>
+          <td><%= wiki.owner_name %></td>
+          <td><%= wiki.page_count %></td>
+          <td><%= wiki.is_public ? '✓' : '🔒' %></td>
+          <td><%= new Date(wiki.created_at).toLocaleDateString() %></td>
+          <td class="action-buttons">
+            <a href="/w/<%= wiki.slug %>/settings" class="btn btn-sm">Settings</a>
+            <form method="POST" action="/admin/wikis/<%= wiki.id %>/delete" style="display:inline"
+                  onsubmit="return confirm('Delete wiki <%= wiki.name %>?')">
+              <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../partials/footer') %>

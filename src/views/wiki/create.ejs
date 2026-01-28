@@ -1,0 +1,65 @@
+<%- include('../partials/header') %>
+
+<div class="form-page">
+  <h1>Create a New Wiki</h1>
+  
+  <% if (error) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>
+
+  <form method="POST" action="/w/create" class="wiki-form">
+    <div class="form-group">
+      <label for="name">Wiki Name</label>
+      <input type="text" id="name" name="name" required autofocus placeholder="My Awesome Wiki">
+    </div>
+
+    <div class="form-group">
+      <label for="slug">URL Slug</label>
+      <div class="input-prefix">
+        <span>/w/</span>
+        <input type="text" id="slug" name="slug" required 
+               pattern="[a-z0-9-]+" title="Lowercase letters, numbers, and hyphens only"
+               placeholder="my-awesome-wiki">
+      </div>
+      <small>This will be part of your wiki's URL</small>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" name="description" rows="3" 
+                placeholder="What is this wiki about?"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox-label">
+        <input type="checkbox" name="is_public" checked>
+        <span>Public wiki (visible to everyone)</span>
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox-label">
+        <input type="checkbox" name="allow_public_edit">
+        <span>Allow anyone to edit (open wiki)</span>
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <a href="/" class="btn">Cancel</a>
+      <button type="submit" class="btn btn-primary">Create Wiki</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Auto-generate slug from name
+  document.getElementById('name').addEventListener('input', function(e) {
+    const slug = e.target.value
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '');
+    document.getElementById('slug').value = slug;
+  });
+</script>
+
+<%- include('../partials/footer') %>
