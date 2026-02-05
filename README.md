@@ -51,6 +51,34 @@ If you want to run the app locally:
 
 3. Open http://localhost:3000 in your browser
 
+### Deploying to Render
+
+To deploy your own instance of Wiki Farm to Render:
+
+1. **Fork or clone** this repository to your GitHub account
+
+2. **Go to** [https://render.com](https://render.com) and sign in with GitHub
+
+3. **Click** "New" → "Web Service"
+
+4. **Select** your Wiki Farm repository from the list
+
+5. **Configure the service:**
+   - **Name**: `wiki-farm` (or your preferred name)
+   - **Region**: Choose the closest to your users
+   - **Branch**: `main`
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+   - **Instance Type**: Free
+
+6. **Click** "Create Web Service"
+
+7. **Wait** for the build to complete (takes 2-3 minutes)
+
+8. **Access** your app at the provided `.onrender.com` URL
+
+> **Note**: On the free tier, the app may sleep after 15 minutes of inactivity. The first request after sleeping may take 30-60 seconds to respond.
+
 ### First User
 
 The first user to register automatically becomes an admin. This account can:
