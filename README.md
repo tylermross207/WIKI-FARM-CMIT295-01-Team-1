@@ -18,12 +18,26 @@ A multi-tenant wiki hosting platform built with Node.js. Create and manage multi
 
 ## Getting Started
 
-### Prerequisites
+### Using the Live App (Recommended)
 
-- Node.js 18+ 
+No installation required! Just visit the live demo:
+
+**[https://wiki-farm-cmit295-01-team-1.onrender.com](https://wiki-farm-cmit295-01-team-1.onrender.com)**
+
+1. Click **Register** to create an account
+2. The first user automatically becomes an admin
+3. Click **Create Wiki** to start your first wiki
+
+### Local Development (Optional)
+
+If you want to run the app locally:
+
+#### Prerequisites
+
+- Node.js 18+
 - npm
 
-### Installation
+#### Installation
 
 1. Install dependencies:
    ```bash
