@@ -2,6 +2,10 @@
 
 A multi-tenant wiki hosting platform built with Node.js. Create and manage multiple wikis from a single installation.
 
+## 🌐 Live Demo
+
+**[View Live App on Render](https://wiki-farm-cmit295-01-team-1.onrender.com)**
+
 ## Features
 
 - **Multi-tenant Architecture**: Host multiple wikis from one instance
