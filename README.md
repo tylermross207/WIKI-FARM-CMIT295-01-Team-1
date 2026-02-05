@@ -30,26 +30,46 @@ No installation required! Just visit the live demo:
 
 ### Local Development (Optional)
 
-If you want to run the app locally:
+If you want to run the app locally on your own computer:
 
 #### Prerequisites
 
-- Node.js 18+
-- npm
+- Node.js 18+ installed ([Download here](https://nodejs.org/))
+- npm (comes with Node.js)
+- Git installed ([Download here](https://git-scm.com/))
 
-#### Installation
+#### Step-by-Step Installation
 
-1. Install dependencies:
+1. **Clone the repository** to your computer:
+   ```bash
+   git clone https://github.com/tylermross207/WIKI-FARM-CMIT295-01-Team-1.git
+   ```
+
+2. **Navigate into the project folder**:
+   ```bash
+   cd WIKI-FARM-CMIT295-01-Team-1
+   ```
+
+3. **Install dependencies**:
    ```bash
    npm install
    ```
 
-2. Start the development server:
+4. **Start the development server**:
    ```bash
    npm run dev
    ```
 
-3. Open http://localhost:3000 in your browser
+5. **Open your browser** and go to:
+   ```
+   http://localhost:3000
+   ```
+
+6. **Register an account** - the first user automatically becomes an admin
+
+7. **Start creating wikis!**
+
+> **Tip**: The server uses `nodemon` for development, so any code changes will automatically restart the server.
 
 ### Deploying to Render
 
