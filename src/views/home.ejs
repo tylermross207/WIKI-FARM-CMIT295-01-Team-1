@@ -1,18 +1,31 @@
 <%- include('partials/header') %>
 
 <div class="home-hero">
-  <h1>🌱 Welcome to Wiki Farm</h1>
-  <p>Create and host your own wikis. Share knowledge with the world.</p>
-  <% if (!user) { %>
-    <div class="hero-actions">
-      <a href="/auth/register" class="btn btn-primary btn-lg">Get Started</a>
-      <a href="/auth/login" class="btn btn-lg">Login</a>
+  <div class="hero-left">
+    <h1>🌱 You Can Wiki Now!</h1>
+    <p>Welcome to the WIKI Farm — a place to create, grow, and share knowledge in a friendly, vintage-styled space.</p>
+
+    <div class="search-input" aria-label="Search">
+      <input type="search" name="q" placeholder="Search the farm..." />
+      <button aria-label="Search">🔍</button>
     </div>
-  <% } else { %>
-    <div class="hero-actions">
-      <a href="/w/create" class="btn btn-primary btn-lg">Create a Wiki</a>
-    </div>
-  <% } %>
+
+    <% if (!user) { %>
+      <div class="hero-actions">
+        <a href="/auth/register" class="btn btn-primary btn-lg">Get Started</a>
+        <a href="/auth/login" class="btn btn-lg">Login</a>
+      </div>
+    <% } else { %>
+      <div class="hero-actions">
+        <a href="/w/create" class="btn btn-primary btn-lg">Create a Wiki</a>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="hero-right">
+    <!-- Add a vintage phone or decorative image at public/images/phone.png to match the mock -->
+    <img src="/images/phone.png" alt="vintage phone" />
+  </div>
 </div>
 
 <section class="wiki-list">
