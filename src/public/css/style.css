@@ -150,6 +150,9 @@ a:hover {
   width: 100%;
 }
 
+/* What is a wiki link*/
+<a href="what-is-a-wiki.html" style="color: white; text-decoration: none; margin-right: 20px;"
+
 /* Main Content */
 main {
   flex: 1;
