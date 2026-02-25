@@ -1,0 +1,48 @@
+<%- include('../partials/header') %>
+
+<div class="what-is-wiki-page">
+  <div class="wiki-explanation">
+    <h1>What is a Wiki?</h1>
+    
+    <div class="explanation-content">
+      <p>A <strong>wiki</strong> is a collaborative website that allows multiple users to create, edit, and organize content together. The word "wiki" comes from the Hawaiian word meaning "quick," reflecting the ease and speed with which content can be created and modified.</p>
+
+      <h2>Key Features of Wikis</h2>
+      <ul>
+        <li><strong>Collaborative:</strong> Multiple users can contribute to the same document or knowledge base</li>
+        <li><strong>Easy to Edit:</strong> Simple markup and formatting make it accessible to users of all technical levels</li>
+        <li><strong>Version Control:</strong> Track changes and revert to previous versions if needed</li>
+        <li><strong>Interconnected:</strong> Pages can be linked together to create a web of related information</li>
+        <li><strong>Growing Knowledge:</strong> Build comprehensive knowledge bases over time through community contributions</li>
+      </ul>
+
+      <h2>Common Uses for Wikis</h2>
+      <ul>
+        <li>Project documentation and team knowledge bases</li>
+        <li>Educational resources and study guides</li>
+        <li>Company policies and procedures</li>
+        <li>Software documentation</li>
+        <li>Community resources and guides</li>
+        <li>Personal note-taking and organization</li>
+      </ul>
+
+      <h2>Welcome to Wiki Farm</h2>
+      <p>Wiki Farm is your space to create, grow, and share knowledge in a friendly, vintage-styled environment. Whether you're documenting a project, building a knowledge base, or organizing information, Wiki Farm makes it simple and enjoyable.</p>
+
+      <p>Start your journey today!</p>
+
+      <% if (!user) { %>
+        <div class="wiki-cta-buttons">
+          <a href="/auth/register" class="btn btn-primary btn-lg">Create an Account</a>
+          <a href="/auth/login" class="btn btn-lg">Already have an account? Login</a>
+        </div>
+      <% } else { %>
+        <div class="wiki-cta-buttons">
+          <a href="/w/create" class="btn btn-primary btn-lg">Create Your First Wiki</a>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
