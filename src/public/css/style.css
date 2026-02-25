@@ -22,6 +22,16 @@
   padding: 0;
 }
 
+.top-info-text {
+  text-align: center;
+  color: white;
+  width: 100%;
+  padding-top: 20px;    /* Adds space from the top header */
+  font-weight: 500;     /* Optional: makes it slightly bolder */
+  text-transform: lowercase; /* Matches your specific request style */
+}
+
+
 body {
   font-family: 'Libre Baskerville', Georgia, serif;
   line-height: 1.65;
