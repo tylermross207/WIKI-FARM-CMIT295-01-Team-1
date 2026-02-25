@@ -26,7 +26,7 @@
   text-align: center;
   color: white;
   width: 100%;
-  padding-top: 40px;    /* Adds space from the top header */
+  padding-top: 100px;    /* Adds space from the top header */
   font-weight: 500;     /* Optional: makes it slightly bolder */
   text-transform: lowercase; /* Matches your specific request style */
 }
