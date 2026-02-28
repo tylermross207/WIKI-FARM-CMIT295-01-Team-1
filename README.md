@@ -188,6 +188,17 @@ Environment variables:
 - `PORT` - Server port (default: 3000)
 - `SESSION_SECRET` - Session encryption key
 
+## Data Persistence
+
+The app uses SQLite for data storage with automatic persistence:
+
+- **Local Development**: Database stored at `src/db/wikifarm.sqlite`
+- **Render Deployment**: Database stored at `/opt/render/project/.data/wikifarm.sqlite` on a persistent disk
+- **Automatic Saving**: All changes (users, wikis, pages, messages) are saved immediately
+- **Redeployments**: Data persists across code redeployments thanks to Render's persistent disk
+
+The `render.yaml` file configures a 1GB persistent disk that stays intact when you push new commits to GitHub.
+
 ## License
 
 MIT

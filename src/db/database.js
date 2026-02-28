@@ -2,7 +2,24 @@ const initSqlJs = require('sql.js');
 const fs = require('fs');
 const path = require('path');
 
-const DB_PATH = path.join(__dirname, 'wikifarm.sqlite');
+// Determine database path based on environment
+let DB_PATH;
+
+if (process.env.RENDER) {
+  // On Render, use a location that persists across deployments
+  // The /opt/render/project directory is persistent
+  DB_PATH = path.join('/opt/render/project/.data', 'wikifarm.sqlite');
+} else {
+  // Locally, use the src/db directory
+  DB_PATH = path.join(__dirname, 'wikifarm.sqlite');
+}
+
+// Ensure directory exists
+const dbDir = path.dirname(DB_PATH);
+if (!fs.existsSync(dbDir)) {
+  fs.mkdirSync(dbDir, { recursive: true });
+  console.log(`📁 Created database directory: ${dbDir}`);
+}
 
 let db = null;
 let SQL = null;
@@ -11,18 +28,25 @@ let SQL = null;
 async function initDatabase() {
   if (db) return db;
   
+  console.log(`🗄️  Using database at: ${DB_PATH}`);
+  
   SQL = await initSqlJs();
   
   // Try to load existing database
   if (fs.existsSync(DB_PATH)) {
+    console.log('📖 Loading existing database...');
     const fileBuffer = fs.readFileSync(DB_PATH);
     db = new SQL.Database(fileBuffer);
   } else {
+    console.log('✨ Creating new database...');
     db = new SQL.Database();
   }
   
   // Enable foreign keys
   db.run('PRAGMA foreign_keys = ON');
+  
+  // Save initial state
+  saveDatabase();
   
   return db;
 }
@@ -30,9 +54,18 @@ async function initDatabase() {
 // Save database to file
 function saveDatabase() {
   if (db) {
-    const data = db.export();
-    const buffer = Buffer.from(data);
-    fs.writeFileSync(DB_PATH, buffer);
+    try {
+      // Ensure directory exists before writing
+      if (!fs.existsSync(dbDir)) {
+        fs.mkdirSync(dbDir, { recursive: true });
+      }
+      
+      const data = db.export();
+      const buffer = Buffer.from(data);
+      fs.writeFileSync(DB_PATH, buffer);
+    } catch (err) {
+      console.error('❌ Error saving database:', err.message);
+    }
   }
 }
 
