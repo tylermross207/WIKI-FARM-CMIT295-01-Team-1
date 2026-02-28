@@ -4,7 +4,7 @@ const path = require('path');
 
 // Use Render persistent disk if available, otherwise use local path
 const DB_PATH = process.env.RENDER
-  ? '/opt/render/project/src/db/wikifarm.sqlite'
+  ? '/var/data/wikifarm.sqlite'
   : path.join(__dirname, 'wikifarm.sqlite');
 
 let db = null;
@@ -35,6 +35,13 @@ function saveDatabase() {
   if (db) {
     const data = db.export();
     const buffer = Buffer.from(data);
+    
+    // Ensure directory exists
+    const dbDir = path.dirname(DB_PATH);
+    if (!fs.existsSync(dbDir)) {
+      fs.mkdirSync(dbDir, { recursive: true });
+    }
+    
     fs.writeFileSync(DB_PATH, buffer);
   }
 }

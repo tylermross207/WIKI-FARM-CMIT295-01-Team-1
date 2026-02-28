@@ -12,5 +12,5 @@ services:
         generateValue: true
     disk:
       - name: db
-        mountPath: /opt/render/project/src/db
+        mountPath: /var/data
         sizeGB: 1
