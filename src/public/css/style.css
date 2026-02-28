@@ -88,6 +88,36 @@ a:hover {
   padding: 0.35rem 0.6rem;
 }
 
+.nav-links .btn {
+  color: auto;
+  padding: 0.45rem 0.9rem;
+}
+
+.nav-links .btn-primary {
+  background: var(--white);
+  color: var(--primary);
+  border-color: var(--white);
+  font-weight: 600;
+}
+
+.nav-links .btn-primary:hover {
+  background: #fff7f7;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.nav-links .btn-ghost {
+  background: transparent;
+  border: 1px solid var(--white);
+  color: var(--white);
+}
+
+.nav-links .btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--white);
+  text-decoration: none;
+}
+
 .user-info {
   display: flex;
   align-items: center;
@@ -140,13 +170,14 @@ a:hover {
 
 .btn-ghost {
   background: transparent;
-  border: 1px solid var(--white);
-  color: var(--white);
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  font-weight: 600;
 }
 
 .btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--white);
+  background: var(--primary-light);
+  color: var(--primary);
   text-decoration: none;
 }
 
