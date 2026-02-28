@@ -1,0 +1,218 @@
+<%- include('../partials/header') %>
+
+<section class="admin-section">
+  <div class="container">
+    <div class="admin-header">
+      <h1>Create New User</h1>
+      <a href="/admin/users" class="btn btn-ghost">Back to Users</a>
+    </div>
+
+    <div class="form-container">
+      <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+        <div class="alert alert-error">
+          <strong>Please fix the following errors:</strong>
+          <ul>
+            <% errors.forEach(err => { %>
+              <li><%= err %></li>
+            <% }); %>
+          </ul>
+        </div>
+      <% } %>
+
+      <form method="POST" action="/admin/users/create" class="admin-form">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            value="<%= typeof data !== 'undefined' && data.username ? data.username : '' %>"
+            placeholder="Enter username"
+            required
+          />
+          <small>At least 3 characters, must be unique</small>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email"
+            value="<%= typeof data !== 'undefined' && data.email ? data.email : '' %>"
+            placeholder="user@example.com"
+            required
+          />
+          <small>Must be unique</small>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password"
+            placeholder="Enter password"
+            required
+          />
+          <small>At least 6 characters</small>
+        </div>
+
+        <div class="form-group">
+          <label for="is_admin" class="checkbox-label">
+            <input 
+              type="checkbox" 
+              id="is_admin" 
+              name="is_admin"
+              <% if (typeof data !== 'undefined' && data.is_admin) { %>checked<% } %>
+            />
+            Make this user an admin
+          </label>
+          <small>Admin users can manage other users, wikis, and view messages</small>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Create User</button>
+          <a href="/admin/users" class="btn btn-ghost">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  .admin-section {
+    padding: 2rem 1rem;
+    background: var(--bg);
+    min-height: calc(100vh - 200px);
+  }
+
+  .admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .admin-header h1 {
+    margin: 0;
+    color: var(--primary);
+    font-size: 2rem;
+  }
+
+  .form-container {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .admin-form {
+    margin-top: 2rem;
+  }
+
+  .admin-form .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .admin-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+
+  .admin-form input[type="text"],
+  .admin-form input[type="email"],
+  .admin-form input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 0.95rem;
+  }
+
+  .admin-form input[type="text"]:focus,
+  .admin-form input[type="email"]:focus,
+  .admin-form input[type="password"]:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(91, 11, 11, 0.1);
+  }
+
+  .admin-form small {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-weight: 400;
+  }
+
+  .checkbox-label input[type="checkbox"] {
+    width: auto;
+    cursor: pointer;
+    margin: 0;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    justify-content: flex-start;
+  }
+
+  .form-actions .btn {
+    flex: 1;
+  }
+
+  .alert {
+    padding: 1rem;
+    border-radius: var(--radius);
+    margin-bottom: 1.5rem;
+  }
+
+  .alert-error {
+    background: #ffe0e0;
+    border: 1px solid var(--danger);
+    color: var(--danger);
+  }
+
+  .alert-error ul {
+    margin: 0.5rem 0 0 1.5rem;
+    padding: 0;
+  }
+
+  .alert-error li {
+    margin: 0.25rem 0;
+  }
+
+  @media (max-width: 768px) {
+    .admin-header {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .form-actions {
+      flex-direction: column;
+    }
+
+    .form-actions .btn {
+      width: 100%;
+    }
+  }
+</style>
+
+<%- include('../partials/footer') %>

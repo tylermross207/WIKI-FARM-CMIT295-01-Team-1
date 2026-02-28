@@ -37,7 +37,7 @@ router.get('/users', requireAuth, requireAdmin, (req, res) => {
     ORDER BY u.created_at DESC
   `).all();
 
-  res.render('admin/users', { users });
+  res.render('admin/users', { users, success: req.query.success });
 });
 
 // Toggle user admin status
@@ -104,6 +104,62 @@ router.post('/contact-messages/:messageId/delete', requireAuth, requireAdmin, (r
   const { messageId } = req.params;
   db.prepare('DELETE FROM contacts WHERE id = ?').run(messageId);
   res.redirect('/admin/contact-messages');
+});
+
+// Create user form
+router.get('/users/create', requireAuth, requireAdmin, (req, res) => {
+  res.render('admin/create-user', { errors: [] });
+});
+
+// Create user (POST)
+router.post('/users/create', requireAuth, requireAdmin, (req, res) => {
+  const { username, email, password, is_admin } = req.body;
+  const errors = [];
+
+  // Validation
+  if (!username || username.trim().length < 3) {
+    errors.push('Username must be at least 3 characters');
+  }
+  if (!email || !email.includes('@')) {
+    errors.push('Please provide a valid email');
+  }
+  if (!password || password.length < 6) {
+    errors.push('Password must be at least 6 characters');
+  }
+
+  // Check if user exists
+  const existingUser = db.prepare('SELECT id FROM users WHERE username = ? OR email = ?').get(username, email);
+  if (existingUser) {
+    errors.push('Username or email already exists');
+  }
+
+  if (errors.length > 0) {
+    return res.render('admin/create-user', { 
+      errors,
+      data: { username, email, is_admin }
+    });
+  }
+
+  // Hash password
+  const bcrypt = require('bcryptjs');
+  const hashedPassword = bcrypt.hashSync(password, 10);
+  const adminFlag = is_admin === 'on' ? 1 : 0;
+
+  try {
+    db.prepare('INSERT INTO users (username, email, password_hash, is_admin) VALUES (?, ?, ?, ?)').run(
+      username.trim(),
+      email.trim(),
+      hashedPassword,
+      adminFlag
+    );
+    res.redirect('/admin/users?success=User created successfully');
+  } catch (err) {
+    errors.push('Error creating user: ' + err.message);
+    res.render('admin/create-user', { 
+      errors,
+      data: { username, email, is_admin }
+    });
+  }
 });
 
 module.exports = router;

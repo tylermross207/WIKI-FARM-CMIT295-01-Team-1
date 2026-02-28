@@ -1,13 +1,22 @@
 <%- include('../partials/header') %>
 
 <div class="admin-page">
-  <h1>Manage Users</h1>
+  <div class="page-header">
+    <h1>Manage Users</h1>
+    <a href="/admin/users/create" class="btn btn-primary">+ Create User</a>
+  </div>
   
   <div class="admin-nav">
     <a href="/admin">Dashboard</a>
     <a href="/admin/users" class="active">Users</a>
     <a href="/admin/wikis">Wikis</a>
   </div>
+
+  <% if (typeof success !== 'undefined' && success) { %>
+    <div class="alert alert-success">
+      <%= success %>
+    </div>
+  <% } %>
 
   <table class="data-table">
     <thead>
@@ -49,4 +58,30 @@
   </table>
 </div>
 
+<style>
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .page-header h1 {
+    margin: 0;
+  }
+
+  .alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+  }
+
+  .alert-success {
+    background: #e8f5e9;
+    border: 1px solid #4caf50;
+    color: #2e7d32;
+  }
+</style>
+
 <%- include('../partials/footer') %>
+
