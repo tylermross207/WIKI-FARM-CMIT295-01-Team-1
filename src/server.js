@@ -50,6 +50,11 @@ app.use('/w', wikiRoutes);
 app.use('/w', pageRoutes);
 app.use('/contact', contactRoutes);
 
+// About Us page
+app.get('/about', (req, res) => {
+  res.render('about');
+});
+
 // Home page - list all public wikis
 app.get('/', (req, res) => {
   const wikis = db.prepare(`
