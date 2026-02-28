@@ -2,7 +2,10 @@ const initSqlJs = require('sql.js');
 const fs = require('fs');
 const path = require('path');
 
-const DB_PATH = path.join(__dirname, 'wikifarm.sqlite');
+// Use Render persistent disk if available, otherwise use local path
+const DB_PATH = process.env.RENDER
+  ? '/opt/render/project/src/db/wikifarm.sqlite'
+  : path.join(__dirname, 'wikifarm.sqlite');
 
 let db = null;
 let SQL = null;
