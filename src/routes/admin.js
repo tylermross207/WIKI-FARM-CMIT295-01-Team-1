@@ -89,4 +89,21 @@ router.post('/wikis/:wikiId/delete', requireAuth, requireAdmin, (req, res) => {
   res.redirect('/admin/wikis');
 });
 
+// List all contact messages
+router.get('/contact-messages', requireAuth, requireAdmin, (req, res) => {
+  const messages = db.prepare(`
+    SELECT * FROM contacts
+    ORDER BY created_at DESC
+  `).all();
+
+  res.render('admin/contact-messages', { messages });
+});
+
+// Delete contact message
+router.post('/contact-messages/:messageId/delete', requireAuth, requireAdmin, (req, res) => {
+  const { messageId } = req.params;
+  db.prepare('DELETE FROM contacts WHERE id = ?').run(messageId);
+  res.redirect('/admin/contact-messages');
+});
+
 module.exports = router;
