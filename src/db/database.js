@@ -2,25 +2,14 @@ const initSqlJs = require('sql.js');
 const fs = require('fs');
 const path = require('path');
 
-// Use Render persistent disk if available, otherwise use local path
-const DB_DIR = process.env.RENDER ? '/var/data' : __dirname;
-const DB_PATH = path.join(DB_DIR, 'wikifarm.sqlite');
+const DB_PATH = path.join(__dirname, 'wikifarm.sqlite');
 
 let db = null;
 let SQL = null;
 
-// Ensure directory exists before we start
-function ensureDbDir() {
-  if (!fs.existsSync(DB_DIR)) {
-    fs.mkdirSync(DB_DIR, { recursive: true });
-  }
-}
-
 // Initialize SQL.js and load/create database
 async function initDatabase() {
   if (db) return db;
-  
-  ensureDbDir();
   
   SQL = await initSqlJs();
   
@@ -35,23 +24,15 @@ async function initDatabase() {
   // Enable foreign keys
   db.run('PRAGMA foreign_keys = ON');
   
-  // Save initial state
-  saveDatabase();
-  
   return db;
 }
 
 // Save database to file
 function saveDatabase() {
   if (db) {
-    try {
-      ensureDbDir();
-      const data = db.export();
-      const buffer = Buffer.from(data);
-      fs.writeFileSync(DB_PATH, buffer);
-    } catch (err) {
-      console.error('Error saving database:', err);
-    }
+    const data = db.export();
+    const buffer = Buffer.from(data);
+    fs.writeFileSync(DB_PATH, buffer);
   }
 }
 

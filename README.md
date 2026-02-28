@@ -188,20 +188,6 @@ Environment variables:
 - `PORT` - Server port (default: 3000)
 - `SESSION_SECRET` - Session encryption key
 
-## Data Persistence (Render Deployment)
-
-The app is configured with persistent storage on Render to ensure data is not lost during redeployments:
-
-- **Database Location**: Uses Render's persistent disk at `/opt/render/project/src/db/wikifarm.sqlite`
-- **Disk Size**: 1GB allocated for database storage
-- **Auto-persistence**: All user logins, wikis, pages, contact messages, and revisions are automatically saved
-- **Redeployments**: New code deployments will not erase existing data
-
-The `render.yaml` file configures this persistent volume automatically. When you push new commits to GitHub, Render will:
-1. Pull the latest code
-2. Keep the existing database intact
-3. Run the new code with all previous data available
-
 ## License
 
 MIT
