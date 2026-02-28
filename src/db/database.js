@@ -1,109 +1,58 @@
-const initSqlJs = require('sql.js');
+const Database = require('better-sqlite3');
 const fs = require('fs');
 const path = require('path');
 
 // Use Render persistent disk if available, otherwise use local path
-const DB_PATH = process.env.RENDER
-  ? '/var/data/wikifarm.sqlite'
-  : path.join(__dirname, 'wikifarm.sqlite');
+const DB_DIR = process.env.RENDER ? '/var/data' : __dirname;
+const DB_PATH = path.join(DB_DIR, 'wikifarm.sqlite');
 
-let db = null;
-let SQL = null;
-
-// Initialize SQL.js and load/create database
-async function initDatabase() {
-  if (db) return db;
-  
-  SQL = await initSqlJs();
-  
-  // Try to load existing database
-  if (fs.existsSync(DB_PATH)) {
-    const fileBuffer = fs.readFileSync(DB_PATH);
-    db = new SQL.Database(fileBuffer);
-  } else {
-    db = new SQL.Database();
-  }
-  
-  // Enable foreign keys
-  db.run('PRAGMA foreign_keys = ON');
-  
-  return db;
+// Ensure directory exists
+if (!fs.existsSync(DB_DIR)) {
+  fs.mkdirSync(DB_DIR, { recursive: true });
 }
 
-// Save database to file
-function saveDatabase() {
-  if (db) {
-    const data = db.export();
-    const buffer = Buffer.from(data);
-    
-    // Ensure directory exists
-    const dbDir = path.dirname(DB_PATH);
-    if (!fs.existsSync(dbDir)) {
-      fs.mkdirSync(dbDir, { recursive: true });
-    }
-    
-    fs.writeFileSync(DB_PATH, buffer);
-  }
-}
+// Initialize database connection
+const db = new Database(DB_PATH);
 
-// Wrapper for synchronous-style API compatibility
+// Enable foreign keys
+db.pragma('foreign_keys = ON');
+
+// Create a wrapper for compatibility with existing code
 class DatabaseWrapper {
-  constructor() {
-    this._initPromise = initDatabase();
-  }
-
-  async _ensureReady() {
-    await this._initPromise;
-  }
-
   prepare(sql) {
-    const self = this;
+    const stmt = db.prepare(sql);
     return {
       run(...params) {
-        db.run(sql, params);
-        saveDatabase();
-        return { 
-          lastInsertRowid: db.exec('SELECT last_insert_rowid()')[0]?.values[0][0],
-          changes: db.getRowsModified()
+        const info = stmt.run(...params);
+        return {
+          lastInsertRowid: info.lastInsertRowid,
+          changes: info.changes
         };
       },
       get(...params) {
-        const stmt = db.prepare(sql);
-        stmt.bind(params);
-        if (stmt.step()) {
-          const row = stmt.getAsObject();
-          stmt.free();
-          return row;
-        }
-        stmt.free();
-        return undefined;
+        return stmt.get(...params);
       },
       all(...params) {
-        const results = [];
-        const stmt = db.prepare(sql);
-        stmt.bind(params);
-        while (stmt.step()) {
-          results.push(stmt.getAsObject());
-        }
-        stmt.free();
-        return results;
+        return stmt.all(...params);
       }
     };
   }
 
   exec(sql) {
-    db.run(sql);
-    saveDatabase();
+    db.exec(sql);
   }
 
   run(sql, params = []) {
-    db.run(sql, params);
-    saveDatabase();
+    db.prepare(sql).run(...params);
   }
 }
 
 const wrapper = new DatabaseWrapper();
 
+// Initialize database
+async function initDatabase() {
+  return wrapper;
+}
+
 module.exports = wrapper;
 module.exports.initDatabase = initDatabase;
-module.exports.saveDatabase = saveDatabase;
