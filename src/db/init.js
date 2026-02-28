@@ -80,6 +80,17 @@ async function initDatabase() {
     )
   `);
 
+  // Contacts table for Contact Us submissions
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS contacts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      message TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
   // Create indexes for better performance
   db.exec(`CREATE INDEX IF NOT EXISTS idx_pages_wiki_id ON pages(wiki_id)`);
   db.exec(`CREATE INDEX IF NOT EXISTS idx_pages_slug ON pages(slug)`);

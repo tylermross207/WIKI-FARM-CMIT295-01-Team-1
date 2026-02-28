@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth');
 const wikiRoutes = require('./routes/wiki');
 const pageRoutes = require('./routes/pages');
 const adminRoutes = require('./routes/admin');
+const contactRoutes = require('./routes/contact');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -47,6 +48,7 @@ app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
 app.use('/w', wikiRoutes);
 app.use('/w', pageRoutes);
+app.use('/contact', contactRoutes);
 
 // Home page - list all public wikis
 app.get('/', (req, res) => {

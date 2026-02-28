@@ -1,0 +1,72 @@
+<%- include('partials/header') %>
+
+<section class="contact-page">
+  <div class="auth-card">
+    <h1>Contact Us</h1>
+    <p class="contact-intro">We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+
+    <% if (typeof errors !== 'undefined' && errors && errors.length > 0) { %>
+      <div class="alert alert-error">
+        <strong>Please fix the following errors:</strong>
+        <ul>
+          <% errors.forEach(function(err) { %>
+            <li><%= err %></li>
+          <% }); %>
+        </ul>
+      </div>
+    <% } %>
+
+    <% if (success) { %>
+      <div class="alert alert-success">
+        <strong>Thank you, <%= data.name %>!</strong> Your message has been received. We'll get back to you shortly.
+      </div>
+      <div class="contact-actions">
+        <a href="/" class="btn btn-ghost">Back to Home</a>
+      </div>
+    <% } else { %>
+      <form method="POST" action="/contact" class="contact-form">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            placeholder="Your name"
+            value="<%= typeof data.name !== 'undefined' ? data.name : '' %>"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="your.email@example.com"
+            value="<%= typeof data.email !== 'undefined' ? data.email : '' %>"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea
+            id="message"
+            name="message"
+            rows="6"
+            placeholder="Tell us what's on your mind..."
+            required
+          ><%= typeof data.message !== 'undefined' ? data.message : '' %></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Send Message</button>
+          <a href="/" class="btn btn-ghost">Cancel</a>
+        </div>
+      </form>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
