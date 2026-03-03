@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('../db/database');
 const { requireAuth, requireWikiAccess } = require('../middleware/auth');
+const { stripHtmlTags, sanitizeInput, isSuspiciousInput } = require('../utils/security');
 
 const router = express.Router();
 
@@ -32,17 +33,36 @@ router.get('/create', requireAuth, (req, res) => {
 router.post('/create', requireAuth, (req, res) => {
   const { name, slug, description, youtube_url, is_public, allow_public_edit } = req.body;
 
+  // Sanitize inputs to prevent XSS and HTML injection
+  const sanitizedName = stripHtmlTags(sanitizeInput(name || '')).trim();
+  const sanitizedSlug = stripHtmlTags(sanitizeInput(slug || '')).trim();
+  const sanitizedDescription = stripHtmlTags(sanitizeInput(description || '')).trim();
+  const sanitizedYoutubeUrl = sanitizeInput(youtube_url || '').trim();
+
+  // Check for suspicious input patterns
+  if (isSuspiciousInput(sanitizedName) || isSuspiciousInput(sanitizedDescription)) {
+    return res.render('wiki/create', { error: 'Input contains suspicious patterns. Please remove any HTML, JavaScript, or SQL keywords.' });
+  }
+
   // Validation
-  if (!name || !slug) {
+  if (!sanitizedName || !sanitizedSlug) {
     return res.render('wiki/create', { error: 'Name and slug are required' });
   }
 
-  if (!/^[a-z0-9-]+$/.test(slug)) {
+  if (sanitizedName.length < 3) {
+    return res.render('wiki/create', { error: 'Wiki name must be at least 3 characters' });
+  }
+
+  if (!/^[a-z0-9-]+$/.test(sanitizedSlug)) {
     return res.render('wiki/create', { error: 'Slug can only contain lowercase letters, numbers, and hyphens' });
   }
 
+  if (sanitizedSlug.length < 3) {
+    return res.render('wiki/create', { error: 'Slug must be at least 3 characters' });
+  }
+
   // Check if slug exists
-  const existingWiki = db.prepare('SELECT id FROM wikis WHERE slug = ?').get(slug);
+  const existingWiki = db.prepare('SELECT id FROM wikis WHERE slug = ?').get(sanitizedSlug);
   if (existingWiki) {
     return res.render('wiki/create', { error: 'A wiki with this slug already exists' });
   }
@@ -51,16 +71,16 @@ router.post('/create', requireAuth, (req, res) => {
     const result = db.prepare(`
       INSERT INTO wikis (slug, name, description, youtube_url, owner_id, is_public, allow_public_edit)
       VALUES (?, ?, ?, ?, ?, ?, ?)
-    `).run(slug, name, description || '', youtube_url || null, req.session.user.id, is_public ? 1 : 0, allow_public_edit ? 1 : 0);
+    `).run(sanitizedSlug, sanitizedName, sanitizedDescription, sanitizedYoutubeUrl || null, req.session.user.id, is_public ? 1 : 0, allow_public_edit ? 1 : 0);
 
     // Create a default home page
-    const welcomeContent = `# Welcome to ${name}\n\nThis is your wiki's home page. Click **Edit** to customize it!`;
+    const welcomeContent = `# Welcome to ${sanitizedName}\n\nThis is your wiki's home page. Click **Edit** to customize it!`;
     db.prepare(`
       INSERT INTO pages (wiki_id, slug, title, content, created_by)
       VALUES (?, 'home', 'Welcome', ?, ?)
     `).run(result.lastInsertRowid, welcomeContent, req.session.user.id);
 
-    res.redirect(`/w/${slug}`);
+    res.redirect(`/w/${sanitizedSlug}`);
   } catch (err) {
     console.error(err);
     res.render('wiki/create', { error: 'Failed to create wiki' });

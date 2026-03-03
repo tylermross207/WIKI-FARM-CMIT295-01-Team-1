@@ -98,6 +98,25 @@
 </div>
 
 <script>
+  // Helper function to strip HTML tags and dangerous content
+  function stripHtmlTags(input) {
+    if (!input) return '';
+    
+    // Remove all HTML tags
+    let cleaned = input.replace(/<[^>]*>/g, '');
+    
+    // Remove common JavaScript patterns
+    cleaned = cleaned.replace(/javascript:/gi, '');
+    cleaned = cleaned.replace(/on\w+\s*=/gi, '');
+    cleaned = cleaned.replace(/eval\(/gi, '');
+    cleaned = cleaned.replace(/expression\(/gi, '');
+    
+    // Remove HTML entities that could be used for attacks
+    cleaned = cleaned.replace(/&#?\w+;/g, '');
+    
+    return cleaned.trim();
+  }
+
   // Get all form inputs
   const nameInput = document.getElementById('name');
   const slugInput = document.getElementById('slug');
@@ -122,16 +141,19 @@
     return match ? match[1] : null;
   }
 
-  // Function to update preview
+  // Function to update preview with filtered content
   function updatePreview() {
-    // Update name
-    previewName.textContent = nameInput.value || 'Your Wiki Name';
+    // Filter and update name (remove HTML tags)
+    const filteredName = stripHtmlTags(nameInput.value);
+    previewName.textContent = filteredName || 'Your Wiki Name';
 
-    // Update slug
-    previewSlug.textContent = '/w/' + (slugInput.value || 'your-wiki-slug');
+    // Filter and update slug
+    const filteredSlug = stripHtmlTags(slugInput.value);
+    previewSlug.textContent = '/w/' + (filteredSlug || 'your-wiki-slug');
 
-    // Update description
-    previewDescription.textContent = descriptionInput.value || 'Your wiki description will appear here';
+    // Filter and update description
+    const filteredDescription = stripHtmlTags(descriptionInput.value);
+    previewDescription.textContent = filteredDescription || 'Your wiki description will appear here';
 
     // Update YouTube video
     const videoId = extractYouTubeId(youtubeInput.value);
@@ -155,21 +177,18 @@
   publicCheckbox.addEventListener('change', updatePreview);
   editCheckbox.addEventListener('change', updatePreview);
 
-  // Initial preview update
-  updatePreview();
-</script>
-
-<%- include('../partials/footer') %>
-
-<script>
   // Auto-generate slug from name
-  document.getElementById('name').addEventListener('input', function(e) {
+  nameInput.addEventListener('input', function(e) {
     const slug = e.target.value
       .toLowerCase()
       .replace(/\s+/g, '-')
       .replace(/[^a-z0-9-]/g, '');
-    document.getElementById('slug').value = slug;
+    slugInput.value = slug;
+    updatePreview();
   });
+
+  // Initial preview update
+  updatePreview();
 </script>
 
 <%- include('../partials/footer') %>
