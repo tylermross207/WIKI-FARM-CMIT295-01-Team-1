@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const MemoryStore = require('memorystore')(session);
 const path = require('path');
+const fs = require('fs');
 const db = require('./db/database');
 
 // Import routes
@@ -18,6 +19,18 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Serve uploaded files from persistent storage on Render
+if (process.env.RENDER) {
+  const persistentUploadsDir = '/opt/render/project/.data/uploads';
+  if (!fs.existsSync(persistentUploadsDir)) {
+    fs.mkdirSync(persistentUploadsDir, { recursive: true });
+  }
+  // Serve files from the persistent storage directory at /uploads route
+  app.use('/uploads', express.static(persistentUploadsDir));
+} else {
+  // In development, uploads are in public/uploads (already served by express.static above)
+}
 
 // Session configuration
 app.use(session({

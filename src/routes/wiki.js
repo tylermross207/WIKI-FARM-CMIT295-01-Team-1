@@ -8,8 +8,16 @@ const { stripHtmlTags, sanitizeInput, isSuspiciousInput } = require('../utils/se
 
 const router = express.Router();
 
-// Configure multer for file uploads
-const uploadsDir = path.join(__dirname, '../public/uploads');
+// Configure multer for file uploads - use persistent storage on Render
+let uploadsDir;
+if (process.env.RENDER) {
+  // On Render, store uploads in the persistent disk mounted at /opt/render/project/.data
+  uploadsDir = path.join('/opt/render/project/.data', 'uploads');
+} else {
+  // Locally, use the src/public/uploads directory
+  uploadsDir = path.join(__dirname, '../public/uploads');
+}
+
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
