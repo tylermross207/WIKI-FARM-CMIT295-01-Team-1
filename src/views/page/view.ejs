@@ -11,6 +11,22 @@
   </nav>
 </div>
 
+<% if (wiki.youtube_url) { %>
+  <div class="youtube-embed-container">
+    <div class="youtube-embed-wrapper">
+      <iframe 
+        width="560" 
+        height="315" 
+        src="https://www.youtube.com/embed/<%= wiki.youtube_embed_id %>" 
+        title="Wiki Video" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+<% } %>
+
 <article class="page-content">
   <header class="page-header">
     <h1><%= page.title %></h1>

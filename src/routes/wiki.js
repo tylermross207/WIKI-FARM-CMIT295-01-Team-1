@@ -4,6 +4,25 @@ const { requireAuth, requireWikiAccess } = require('../middleware/auth');
 
 const router = express.Router();
 
+// Helper function to extract YouTube video ID from URL
+function extractYouTubeVideoId(url) {
+  if (!url) return null;
+  
+  try {
+    // Handle youtube.com/watch?v=ID format
+    const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+    return match ? match[1] : null;
+  } catch (err) {
+    return null;
+  }
+}
+
+// Helper function to get embed URL from YouTube URL
+function getYouTubeEmbedUrl(youtubeUrl) {
+  const videoId = extractYouTubeVideoId(youtubeUrl);
+  return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+}
+
 // Create wiki form
 router.get('/create', requireAuth, (req, res) => {
   res.render('wiki/create', { error: null });
@@ -11,7 +30,7 @@ router.get('/create', requireAuth, (req, res) => {
 
 // Create wiki handler
 router.post('/create', requireAuth, (req, res) => {
-  const { name, slug, description, is_public, allow_public_edit } = req.body;
+  const { name, slug, description, youtube_url, is_public, allow_public_edit } = req.body;
 
   // Validation
   if (!name || !slug) {
@@ -30,9 +49,9 @@ router.post('/create', requireAuth, (req, res) => {
 
   try {
     const result = db.prepare(`
-      INSERT INTO wikis (slug, name, description, owner_id, is_public, allow_public_edit)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `).run(slug, name, description || '', req.session.user.id, is_public ? 1 : 0, allow_public_edit ? 1 : 0);
+      INSERT INTO wikis (slug, name, description, youtube_url, owner_id, is_public, allow_public_edit)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `).run(slug, name, description || '', youtube_url || null, req.session.user.id, is_public ? 1 : 0, allow_public_edit ? 1 : 0);
 
     // Create a default home page
     db.prepare(`

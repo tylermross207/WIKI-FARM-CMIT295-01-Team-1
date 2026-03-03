@@ -6,6 +6,19 @@ const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
+// Helper function to extract YouTube video ID from URL
+function extractYouTubeVideoId(url) {
+  if (!url) return null;
+  
+  try {
+    // Handle youtube.com/watch?v=ID and youtu.be/ID formats
+    const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+    return match ? match[1] : null;
+  } catch (err) {
+    return null;
+  }
+}
+
 // Configure marked for wiki links
 const renderer = new marked.Renderer();
 const originalLinkRenderer = renderer.link.bind(renderer);
@@ -91,11 +104,15 @@ router.get('/:wikiSlug/:pageSlug', (req, res) => {
 
   const renderedContent = renderMarkdown(page.content, wikiSlug);
 
+  // Extract YouTube video ID if URL exists
+  const youtubeEmbedId = wiki.youtube_url ? extractYouTubeVideoId(wiki.youtube_url) : null;
+
   res.render('page/view', { 
     wiki, 
     page, 
     content: renderedContent,
-    canEdit: canEdit(wiki, req.session.user)
+    canEdit: canEdit(wiki, req.session.user),
+    youtube_embed_id: youtubeEmbedId
   });
 });
 
