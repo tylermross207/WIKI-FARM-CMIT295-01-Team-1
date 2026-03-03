@@ -54,10 +54,11 @@ router.post('/create', requireAuth, (req, res) => {
     `).run(slug, name, description || '', youtube_url || null, req.session.user.id, is_public ? 1 : 0, allow_public_edit ? 1 : 0);
 
     // Create a default home page
+    const welcomeContent = `# Welcome to ${name}\n\nThis is your wiki's home page. Click **Edit** to customize it!`;
     db.prepare(`
       INSERT INTO pages (wiki_id, slug, title, content, created_by)
-      VALUES (?, 'home', 'Welcome', '# Welcome to ${name}\n\nThis is your wiki''s home page. Click **Edit** to customize it!', ?)
-    `).run(result.lastInsertRowid, req.session.user.id);
+      VALUES (?, 'home', 'Welcome', ?, ?)
+    `).run(result.lastInsertRowid, welcomeContent, req.session.user.id);
 
     res.redirect(`/w/${slug}`);
   } catch (err) {
