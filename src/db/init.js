@@ -93,6 +93,18 @@ async function initDatabase() {
     )
   `);
 
+  // User preferences for theme customization
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS user_preferences (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL UNIQUE,
+      theme_name TEXT DEFAULT 'burgundy',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    )
+  `);
+
   // Create indexes for better performance
   db.exec(`CREATE INDEX IF NOT EXISTS idx_pages_wiki_id ON pages(wiki_id)`);
   db.exec(`CREATE INDEX IF NOT EXISTS idx_pages_slug ON pages(slug)`);

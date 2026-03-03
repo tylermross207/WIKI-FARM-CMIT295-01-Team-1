@@ -11,6 +11,7 @@ const wikiRoutes = require('./routes/wiki');
 const pageRoutes = require('./routes/pages');
 const adminRoutes = require('./routes/admin');
 const contactRoutes = require('./routes/contact');
+const settingsRoutes = require('./routes/settings');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -49,6 +50,14 @@ app.use(session({
 // Make user available to all templates
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
+  
+  // Load user's theme preference if logged in
+  if (req.session.user && !req.session.user.theme) {
+    const prefs = db.prepare('SELECT theme_name FROM user_preferences WHERE user_id = ?').get(req.session.user.id);
+    req.session.user.theme = prefs?.theme_name || 'burgundy';
+  }
+  
+  res.locals.userTheme = req.session.user?.theme || 'burgundy';
   next();
 });
 
@@ -59,6 +68,7 @@ app.set('views', path.join(__dirname, 'views'));
 // Routes
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
+app.use('/settings', settingsRoutes);
 app.use('/w', wikiRoutes);
 app.use('/w', pageRoutes);
 app.use('/contact', contactRoutes);

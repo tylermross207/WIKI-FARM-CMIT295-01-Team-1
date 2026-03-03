@@ -1,0 +1,130 @@
+<%- include('../partials/header') %>
+
+<div class="settings-container">
+  <h1>Settings & Preferences</h1>
+  
+  <div class="settings-section">
+    <h2>Theme Customization</h2>
+    <p>Choose your preferred color theme for the website. Your choice will be saved to your account.</p>
+    
+    <% if (error) { %>
+      <div class="alert alert-danger"><%= error %></div>
+    <% } %>
+    
+    <% if (success) { %>
+      <div class="alert alert-success"><%= success %></div>
+    <% } %>
+    
+    <form method="POST" action="/settings/preferences/theme" class="theme-selector">
+      <div class="theme-grid">
+        <% Object.entries(themes).forEach(([key, theme]) => { %>
+          <label class="theme-option <%= currentTheme === key ? 'active' : '' %>">
+            <input type="radio" name="theme" value="<%= key %>" <%= currentTheme === key ? 'checked' : '' %>>
+            <div class="theme-preview" style="--preview-primary: <%= theme.primary %>; --preview-bg: <%= theme.bg %>;">
+              <div class="theme-name"><%= theme.name %></div>
+            </div>
+          </label>
+        <% }); %>
+      </div>
+      
+      <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Apply Theme</button>
+    </form>
+  </div>
+</div>
+
+<style>
+  .settings-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  
+  .settings-container h1 {
+    margin-bottom: 2rem;
+    color: var(--text);
+  }
+  
+  .settings-section {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+  }
+  
+  .settings-section h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+  }
+  
+  .settings-section p {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+  
+  .alert {
+    padding: 1rem;
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+  }
+  
+  .alert-danger {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef5350;
+  }
+  
+  .alert-success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #66bb6a;
+  }
+  
+  .theme-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .theme-option {
+    cursor: pointer;
+    display: block;
+  }
+  
+  .theme-option input {
+    display: none;
+  }
+  
+  .theme-preview {
+    background: var(--preview-bg);
+    border: 3px solid transparent;
+    border-radius: var(--radius);
+    padding: 1.5rem 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .theme-option input:checked + .theme-preview,
+  .theme-option.active .theme-preview {
+    border-color: var(--preview-primary);
+    box-shadow: 0 0 0 4px rgba(0,0,0,0.1), 0 4px 12px var(--preview-primary);
+    transform: translateY(-2px);
+  }
+  
+  .theme-name {
+    color: var(--preview-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  
+  @media (max-width: 768px) {
+    .theme-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+
+<%- include('../partials/footer') %>
