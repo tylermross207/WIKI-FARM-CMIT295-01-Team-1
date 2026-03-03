@@ -1,9 +1,44 @@
 const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const db = require('../db/database');
 const { requireAuth, requireWikiAccess } = require('../middleware/auth');
 const { stripHtmlTags, sanitizeInput, isSuspiciousInput } = require('../utils/security');
 
 const router = express.Router();
+
+// Configure multer for file uploads
+const uploadsDir = path.join(__dirname, '../public/uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadsDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, 'wiki-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  // Only allow image files
+  const allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+  if (allowedMimes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only image files are allowed'), false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+});
 
 // Helper function to extract YouTube video ID from URL
 function extractYouTubeVideoId(url) {
@@ -30,7 +65,7 @@ router.get('/create', requireAuth, (req, res) => {
 });
 
 // Create wiki handler
-router.post('/create', requireAuth, (req, res) => {
+router.post('/create', requireAuth, upload.single('wiki_image'), (req, res) => {
   const { name, slug, description, youtube_url, is_public, allow_public_edit } = req.body;
 
   // Sanitize inputs to prevent XSS and HTML injection
@@ -41,37 +76,59 @@ router.post('/create', requireAuth, (req, res) => {
 
   // Check for suspicious input patterns
   if (isSuspiciousInput(sanitizedName) || isSuspiciousInput(sanitizedDescription)) {
+    // Delete uploaded file if it exists
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
     return res.render('wiki/create', { error: 'Input contains suspicious patterns. Please remove any HTML, JavaScript, or SQL keywords.' });
   }
 
   // Validation
   if (!sanitizedName || !sanitizedSlug) {
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
     return res.render('wiki/create', { error: 'Name and slug are required' });
   }
 
   if (sanitizedName.length < 3) {
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
     return res.render('wiki/create', { error: 'Wiki name must be at least 3 characters' });
   }
 
   if (!/^[a-z0-9-]+$/.test(sanitizedSlug)) {
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
     return res.render('wiki/create', { error: 'Slug can only contain lowercase letters, numbers, and hyphens' });
   }
 
   if (sanitizedSlug.length < 3) {
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
     return res.render('wiki/create', { error: 'Slug must be at least 3 characters' });
   }
 
   // Check if slug exists
   const existingWiki = db.prepare('SELECT id FROM wikis WHERE slug = ?').get(sanitizedSlug);
   if (existingWiki) {
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
     return res.render('wiki/create', { error: 'A wiki with this slug already exists' });
   }
 
   try {
+    // Store the image path relative to public folder
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+
     const result = db.prepare(`
-      INSERT INTO wikis (slug, name, description, youtube_url, owner_id, is_public, allow_public_edit)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `).run(sanitizedSlug, sanitizedName, sanitizedDescription, sanitizedYoutubeUrl || null, req.session.user.id, is_public ? 1 : 0, allow_public_edit ? 1 : 0);
+      INSERT INTO wikis (slug, name, description, youtube_url, wiki_image_path, owner_id, is_public, allow_public_edit)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(sanitizedSlug, sanitizedName, sanitizedDescription, sanitizedYoutubeUrl || null, imagePath, req.session.user.id, is_public ? 1 : 0, allow_public_edit ? 1 : 0);
 
     // Create a default home page
     const welcomeContent = `# Welcome to ${sanitizedName}\n\nThis is your wiki's home page. Click **Edit** to customize it!`;
@@ -82,6 +139,10 @@ router.post('/create', requireAuth, (req, res) => {
 
     res.redirect(`/w/${sanitizedSlug}`);
   } catch (err) {
+    // Delete uploaded file if it exists
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
     console.error(err);
     res.render('wiki/create', { error: 'Failed to create wiki' });
   }

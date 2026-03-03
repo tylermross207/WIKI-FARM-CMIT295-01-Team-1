@@ -27,6 +27,12 @@
   </div>
 <% } %>
 
+<% if (wiki.wiki_image_path) { %>
+  <div class="wiki-image-container">
+    <img src="<%= wiki.wiki_image_path %>" alt="<%= wiki.name %>" class="wiki-image">
+  </div>
+<% } %>
+
 <article class="page-content">
   <header class="page-header">
     <h1><%= page.title %></h1>

@@ -639,6 +639,24 @@ main {
   border-radius: var(--radius);
 }
 
+/* Wiki Image */
+.wiki-image-container {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.wiki-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  max-height: 500px;
+  box-shadow: 0 4px 12px rgba(43, 22, 18, 0.1);
+}
+
 /* Markdown Content */
 .markdown-content h1,
 .markdown-content h2,

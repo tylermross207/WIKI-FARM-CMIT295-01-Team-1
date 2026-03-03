@@ -24,6 +24,7 @@ async function initDatabase() {
       name TEXT NOT NULL,
       description TEXT,
       youtube_url TEXT,
+      wiki_image_path TEXT,
       owner_id INTEGER NOT NULL,
       is_public INTEGER DEFAULT 1,
       allow_public_edit INTEGER DEFAULT 0,

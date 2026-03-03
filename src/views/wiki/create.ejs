@@ -8,7 +8,7 @@
       <div class="alert alert-error"><%= error %></div>
     <% } %>
 
-    <form method="POST" action="/w/create" class="wiki-form" id="wikiForm">
+    <form method="POST" action="/w/create" class="wiki-form" id="wikiForm" enctype="multipart/form-data">
       <div class="form-group">
         <label for="name">Wiki Name</label>
         <input type="text" id="name" name="name" required autofocus placeholder="My Awesome Wiki">
@@ -37,6 +37,12 @@
                placeholder="https://www.youtube.com/watch?v=..." 
                pattern="https://.*youtube\.com/.*">
         <small>Paste a YouTube link to embed a video on your wiki</small>
+      </div>
+
+      <div class="form-group">
+        <label for="wiki_image">Wiki Image (Optional)</label>
+        <input type="file" id="wiki_image" name="wiki_image" accept="image/*">
+        <small>Upload an image to display on your wiki's home page (PNG, JPG, GIF - max 5MB)</small>
       </div>
 
       <div class="form-group">
@@ -69,6 +75,12 @@
           <span class="preview-slug" id="previewSlug">/w/your-wiki-slug</span>
         </div>
       </div>
+
+      <% if (true) { %>
+        <div class="preview-image" id="previewImage" style="display:none;">
+          <img id="previewImageElement" src="" alt="Wiki Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 1rem;">
+        </div>
+      <% } %>
 
       <% if (true) { %>
         <div class="preview-video" id="previewVideo" style="display:none;">
@@ -122,6 +134,7 @@
   const slugInput = document.getElementById('slug');
   const descriptionInput = document.getElementById('description');
   const youtubeInput = document.getElementById('youtube_url');
+  const imageInput = document.getElementById('wiki_image');
   const publicCheckbox = document.querySelector('input[name="is_public"]');
   const editCheckbox = document.querySelector('input[name="allow_public_edit"]');
 
@@ -129,6 +142,8 @@
   const previewName = document.getElementById('previewName');
   const previewSlug = document.getElementById('previewSlug');
   const previewDescription = document.getElementById('previewDescription');
+  const previewImage = document.getElementById('previewImage');
+  const previewImageElement = document.getElementById('previewImageElement');
   const previewVideo = document.getElementById('previewVideo');
   const previewIframe = document.getElementById('previewIframe');
   const publicBadge = document.getElementById('publicBadge');
@@ -154,6 +169,18 @@
     // Filter and update description
     const filteredDescription = stripHtmlTags(descriptionInput.value);
     previewDescription.textContent = filteredDescription || 'Your wiki description will appear here';
+
+    // Update image preview
+    if (imageInput.files && imageInput.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        previewImageElement.src = e.target.result;
+        previewImage.style.display = 'block';
+      };
+      reader.readAsDataURL(imageInput.files[0]);
+    } else {
+      previewImage.style.display = 'none';
+    }
 
     // Update YouTube video
     const videoId = extractYouTubeId(youtubeInput.value);
