@@ -198,14 +198,24 @@ Environment variables:
 
 ## Data Persistence
 
-The app uses SQLite for data storage with automatic persistence:
+The app uses SQLite for data storage with automatic persistence, plus persistent file storage for uploaded images:
 
-- **Local Development**: Database stored at `src/db/wikifarm.sqlite`
-- **Render Deployment**: Database stored at `/opt/render/project/.data/wikifarm.sqlite` on a persistent disk
-- **Automatic Saving**: All changes (users, wikis, pages, messages) are saved immediately
+- **Local Development**: 
+  - Database stored at `src/db/wikifarm.sqlite`
+  - Uploaded images stored in `src/public/uploads`
+- **Render Deployment**: 
+  - Database stored at `/opt/render/project/.data/wikifarm.sqlite` on a persistent disk
+  - Uploaded images stored at `/opt/render/project/.data/uploads` on the same persistent disk
+- **Automatic Saving**: All changes (users, wikis, pages, messages, images) are saved immediately
 - **Redeployments**: Data persists across code redeployments thanks to Render's persistent disk
 
-The `render.yaml` file configures a 1GB persistent disk that stays intact when you push new commits to GitHub.
+The `render.yaml` file configures a **1GB persistent disk** that stays intact when you push new commits to GitHub. This means:
+- ✅ All your wikis and pages stay intact after redeployment
+- ✅ All uploaded images remain available
+- ✅ User accounts and data are preserved
+- ✅ No data loss when pulling code updates
+
+You can freely update your code on GitHub and Render will redeploy without losing any of the data you've created through the web interface!
 
 ## License
 
