@@ -11,10 +11,13 @@ A multi-tenant wiki hosting platform built with Node.js. Create and manage multi
 - **Multi-tenant Architecture**: Host multiple wikis from one instance
 - **User Authentication**: Secure login/registration system
 - **Markdown Support**: Write pages using Markdown with live rendering
+- **Media Embedding**: Embed YouTube videos and upload custom wiki images
+- **Image Uploads**: Add images when creating wikis with live preview before submission
 - **Revision History**: Track all changes with full version history
 - **Access Control**: Public/private wikis with member management
 - **Admin Dashboard**: Manage users and wikis from a central dashboard
 - **Responsive Design**: Works on desktop and mobile devices
+- **Input Security**: Server-side and client-side protection against HTML/JavaScript injection
 
 ## Getting Started
 
@@ -113,8 +116,11 @@ The first user to register automatically becomes an admin. This account can:
 1. Register or log in
 2. Click "Create Wiki"
 3. Choose a name and URL slug
-4. Configure visibility (public/private)
-5. Start adding pages!
+4. Add an optional image for your wiki (supported formats: PNG, JPG, GIF, WebP; max 5MB)
+5. Optionally embed a YouTube video by providing the video URL
+6. Configure visibility (public/private)
+7. See a live preview as you fill in the form
+8. Create and start adding pages!
 
 ### Editing Pages
 
@@ -126,6 +132,8 @@ The first user to register automatically becomes an admin. This account can:
 
 As a wiki owner you can:
 - Change wiki name and description
+- Upload or change your wiki's image
+- Embed YouTube videos
 - Toggle public/private visibility
 - Allow open editing (anyone can edit)
 - Add members with editor/viewer roles
