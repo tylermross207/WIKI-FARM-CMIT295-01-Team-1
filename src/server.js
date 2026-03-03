@@ -55,14 +55,13 @@ app.get('/about', (req, res) => {
   res.render('about');
 });
 
-// Home page - list all public wikis
+// Home page - list all wikis
 app.get('/', (req, res) => {
   const wikis = db.prepare(`
     SELECT w.*, u.username as owner_name,
            (SELECT COUNT(*) FROM pages WHERE wiki_id = w.id) as page_count
     FROM wikis w
-    JOIN users u ON w.owner_id = u.id
-    WHERE w.is_public = 1
+    LEFT JOIN users u ON w.owner_id = u.id
     ORDER BY w.created_at DESC
   `).all();
   
