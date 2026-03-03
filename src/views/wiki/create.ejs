@@ -1,63 +1,165 @@
 <%- include('../partials/header') %>
 
-<div class="form-page">
-  <h1>Create a New Wiki</h1>
-  
-  <% if (error) { %>
-    <div class="alert alert-error"><%= error %></div>
-  <% } %>
+<div class="create-wiki-container">
+  <div class="form-section">
+    <h1>Create a New Wiki</h1>
+    
+    <% if (error) { %>
+      <div class="alert alert-error"><%= error %></div>
+    <% } %>
 
-  <form method="POST" action="/w/create" class="wiki-form">
-    <div class="form-group">
-      <label for="name">Wiki Name</label>
-      <input type="text" id="name" name="name" required autofocus placeholder="My Awesome Wiki">
-    </div>
-
-    <div class="form-group">
-      <label for="slug">URL Slug</label>
-      <div class="input-prefix">
-        <span>/w/</span>
-        <input type="text" id="slug" name="slug" required 
-               pattern="[a-z0-9-]+" title="Lowercase letters, numbers, and hyphens only"
-               placeholder="my-awesome-wiki">
+    <form method="POST" action="/w/create" class="wiki-form" id="wikiForm">
+      <div class="form-group">
+        <label for="name">Wiki Name</label>
+        <input type="text" id="name" name="name" required autofocus placeholder="My Awesome Wiki">
       </div>
-      <small>This will be part of your wiki's URL</small>
-    </div>
 
-    <div class="form-group">
-      <label for="description">Description</label>
-      <textarea id="description" name="description" rows="3" 
-                placeholder="What is this wiki about?"></textarea>
-    </div>
+      <div class="form-group">
+        <label for="slug">URL Slug</label>
+        <div class="input-prefix">
+          <span>/w/</span>
+          <input type="text" id="slug" name="slug" required 
+                 pattern="[a-z0-9-]+" title="Lowercase letters, numbers, and hyphens only"
+                 placeholder="my-awesome-wiki">
+        </div>
+        <small>This will be part of your wiki's URL</small>
+      </div>
 
-    <div class="form-group">
-      <label for="youtube_url">YouTube Video URL (Optional)</label>
-      <input type="url" id="youtube_url" name="youtube_url" 
-             placeholder="https://www.youtube.com/watch?v=..." 
-             pattern="https://.*youtube\.com/.*">
-      <small>Paste a YouTube link to embed a video on your wiki</small>
-    </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="3" 
+                  placeholder="What is this wiki about?"></textarea>
+      </div>
 
-    <div class="form-group">
-      <label class="checkbox-label">
-        <input type="checkbox" name="is_public" checked>
-        <span>Public wiki (visible to everyone)</span>
-      </label>
-    </div>
+      <div class="form-group">
+        <label for="youtube_url">YouTube Video URL (Optional)</label>
+        <input type="url" id="youtube_url" name="youtube_url" 
+               placeholder="https://www.youtube.com/watch?v=..." 
+               pattern="https://.*youtube\.com/.*">
+        <small>Paste a YouTube link to embed a video on your wiki</small>
+      </div>
 
-    <div class="form-group">
-      <label class="checkbox-label">
-        <input type="checkbox" name="allow_public_edit">
-        <span>Allow anyone to edit (open wiki)</span>
-      </label>
-    </div>
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input type="checkbox" name="is_public" checked>
+          <span>Public wiki (visible to everyone)</span>
+        </label>
+      </div>
 
-    <div class="form-actions">
-      <a href="/" class="btn">Cancel</a>
-      <button type="submit" class="btn btn-primary">Create Wiki</button>
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input type="checkbox" name="allow_public_edit">
+          <span>Allow anyone to edit (open wiki)</span>
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <a href="/" class="btn">Cancel</a>
+        <button type="submit" class="btn btn-primary">Create Wiki</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="preview-section">
+    <h2>Preview</h2>
+    <div class="preview-card">
+      <div class="preview-header">
+        <h3 id="previewName">Your Wiki Name</h3>
+        <div class="preview-meta">
+          <span class="preview-slug" id="previewSlug">/w/your-wiki-slug</span>
+        </div>
+      </div>
+
+      <% if (true) { %>
+        <div class="preview-video" id="previewVideo" style="display:none;">
+          <div class="youtube-embed-wrapper">
+            <iframe 
+              id="previewIframe"
+              width="100%" 
+              height="315" 
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowfullscreen>
+            </iframe>
+          </div>
+        </div>
+      <% } %>
+
+      <div class="preview-description" id="previewDescription">
+        Your wiki description will appear here
+      </div>
+
+      <div class="preview-badges">
+        <span class="badge" id="publicBadge">🌐 Public</span>
+        <span class="badge" id="editBadge" style="display:none;">✏️ Open Edit</span>
+      </div>
     </div>
-  </form>
+  </div>
 </div>
+
+<script>
+  // Get all form inputs
+  const nameInput = document.getElementById('name');
+  const slugInput = document.getElementById('slug');
+  const descriptionInput = document.getElementById('description');
+  const youtubeInput = document.getElementById('youtube_url');
+  const publicCheckbox = document.querySelector('input[name="is_public"]');
+  const editCheckbox = document.querySelector('input[name="allow_public_edit"]');
+
+  // Get all preview elements
+  const previewName = document.getElementById('previewName');
+  const previewSlug = document.getElementById('previewSlug');
+  const previewDescription = document.getElementById('previewDescription');
+  const previewVideo = document.getElementById('previewVideo');
+  const previewIframe = document.getElementById('previewIframe');
+  const publicBadge = document.getElementById('publicBadge');
+  const editBadge = document.getElementById('editBadge');
+
+  // Function to extract YouTube video ID
+  function extractYouTubeId(url) {
+    if (!url) return null;
+    const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+    return match ? match[1] : null;
+  }
+
+  // Function to update preview
+  function updatePreview() {
+    // Update name
+    previewName.textContent = nameInput.value || 'Your Wiki Name';
+
+    // Update slug
+    previewSlug.textContent = '/w/' + (slugInput.value || 'your-wiki-slug');
+
+    // Update description
+    previewDescription.textContent = descriptionInput.value || 'Your wiki description will appear here';
+
+    // Update YouTube video
+    const videoId = extractYouTubeId(youtubeInput.value);
+    if (videoId) {
+      previewVideo.style.display = 'block';
+      previewIframe.src = `https://www.youtube.com/embed/${videoId}`;
+    } else {
+      previewVideo.style.display = 'none';
+    }
+
+    // Update badges
+    publicBadge.style.display = publicCheckbox.checked ? 'inline-block' : 'none';
+    editBadge.style.display = editCheckbox.checked ? 'inline-block' : 'none';
+  }
+
+  // Add event listeners for live preview
+  nameInput.addEventListener('input', updatePreview);
+  slugInput.addEventListener('input', updatePreview);
+  descriptionInput.addEventListener('input', updatePreview);
+  youtubeInput.addEventListener('input', updatePreview);
+  publicCheckbox.addEventListener('change', updatePreview);
+  editCheckbox.addEventListener('change', updatePreview);
+
+  // Initial preview update
+  updatePreview();
+</script>
+
+<%- include('../partials/footer') %>
 
 <script>
   // Auto-generate slug from name
