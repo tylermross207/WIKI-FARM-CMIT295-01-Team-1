@@ -131,8 +131,8 @@ a:hover {
   padding: 0.45rem 0.9rem;
   border: 1px solid transparent;
   border-radius: calc(var(--radius) * 0.8);
-  background: transparent;
-  color: var(--white);
+  background: #f3e8d7;
+  color: #5a0a0a;
   cursor: pointer;
   font-size: 0.95rem;
   text-decoration: none;
