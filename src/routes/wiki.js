@@ -164,7 +164,7 @@ router.get('/:wikiSlug', (req, res) => {
   if (!wiki) {
     return res.status(404).render('error', { message: 'Wiki not found', error: {} });
   }
-
+  
   // Check access for private wikis
   if (!wiki.is_public) {
     if (!req.session.user) {
@@ -180,8 +180,16 @@ router.get('/:wikiSlug', (req, res) => {
     }
   }
 
+   const homePage = db.prepare(
+    'SELECT * FROM pages WHERE wiki_id = ? AND slug = ?'
+  ).get(wiki.id, 'home');
+
+  if (!homePage) {
+    return res.redirect(`/w/${wikiSlug}/home/edit`);
+  }
+  
   // Redirect to home page
-  res.redirect(`/w/${wikiSlug}/home`);
+  return res.redirect(`/w/${wikiSlug}/home`);
 });
 
 // Wiki settings
