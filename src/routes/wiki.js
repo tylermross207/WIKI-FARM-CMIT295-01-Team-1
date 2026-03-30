@@ -189,7 +189,7 @@ router.get('/:wikiSlug', (req, res) => {
   }
   
   // Redirect to home page
-  return res.redirect(`/w/${wikiSlug}/home`);
+  res.redirect(`/w/${wikiSlug}/home`);
 });
 
 // Wiki settings
