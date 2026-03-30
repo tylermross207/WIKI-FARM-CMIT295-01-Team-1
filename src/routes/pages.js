@@ -85,13 +85,17 @@ router.get('/:wikiSlug/:pageSlug', (req, res) => {
     return res.redirect('/auth/login');
   }
 
-  const page = db.prepare(`
+  /* const page = db.prepare(`
     SELECT p.*, u.username as author, u2.username as last_editor
     FROM pages p
     JOIN users u ON p.created_by = u.id
     LEFT JOIN users u2 ON p.updated_by = u2.id
     WHERE p.wiki_id = ? AND p.slug = ?
-  `).get(wiki.id, pageSlug);
+  `).get(wiki.id, pageSlug); */
+
+  // This SQL query doesn't work. -Rylan
+  // Simplified query
+  const page = db.prepare('SELECT * FROM pages WHERE wiki_id = ? AND slug = ?').get(wiki.id, pageSlug);
 
   if (!page) {
     // Page doesn't exist - offer to create it
