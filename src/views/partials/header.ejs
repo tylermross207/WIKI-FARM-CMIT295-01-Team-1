@@ -20,6 +20,31 @@
           <% if (user.is_admin) { %>
             <a href="/admin">Admin</a>
           <% } %>
+        <% } %>
+        
+        <!-- Theme Selector -->
+        <select id="theme-selector" class="theme-selector" onchange="applyTheme(this.value)">
+          <option value="burgundy">Burgundy</option>
+          <option value="ocean">Ocean</option>
+          <option value="forest">Forest</option>
+          <option value="sunset">Sunset</option>
+          <option value="purple">Purple</option>
+          <option value="slate">Slate</option>
+        </select>
+        <script>
+          const savedTheme = localStorage.getItem('wiki-farm-theme') || 'burgundy';
+          const selector = document.getElementById('theme-selector');
+          if (selector) {
+            selector.value = savedTheme;
+          }
+        </script>
+        
+        <!-- Dark Mode Toggle -->
+        <button id="dark-mode-btn" class="dark-mode-btn" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+          🌙
+        </button>
+        
+        <% if (typeof user !== 'undefined' && user) { %>
           <span class="user-info">
             👤 <%= user.username %>
             <a href="/auth/logout" class="btn btn-sm">Logout</a>

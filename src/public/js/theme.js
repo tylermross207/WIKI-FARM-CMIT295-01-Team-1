@@ -92,6 +92,41 @@ function loadSavedTheme() {
   if (saved && THEMES[saved]) {
     applyTheme(saved);
   }
+  
+  // Load dark mode preference
+  const isDarkMode = localStorage.getItem('wiki-farm-dark-mode') === 'true';
+  if (isDarkMode) {
+    enableDarkMode();
+  }
+}
+
+function toggleDarkMode() {
+  const isDarkMode = document.body.classList.contains('dark-mode');
+  if (isDarkMode) {
+    disableDarkMode();
+  } else {
+    enableDarkMode();
+  }
+}
+
+function enableDarkMode() {
+  document.body.classList.add('dark-mode');
+  const btn = document.getElementById('dark-mode-btn');
+  if (btn) {
+    btn.textContent = '☀️';
+    btn.title = 'Toggle Light Mode';
+  }
+  localStorage.setItem('wiki-farm-dark-mode', 'true');
+}
+
+function disableDarkMode() {
+  document.body.classList.remove('dark-mode');
+  const btn = document.getElementById('dark-mode-btn');
+  if (btn) {
+    btn.textContent = '🌙';
+    btn.title = 'Toggle Dark Mode';
+  }
+  localStorage.setItem('wiki-farm-dark-mode', 'false');
 }
 
 // Load theme on page load
