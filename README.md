@@ -6,18 +6,48 @@ A multi-tenant wiki hosting platform built with Node.js. Create and manage multi
 
 **[View Live App on Render](https://wiki-farm-cmit295-01-team-1.onrender.com)**
 
-## Features
+## ✨ Features
+
+### Core Features
 
 - **Multi-tenant Architecture**: Host multiple wikis from one instance
 - **User Authentication**: Secure login/registration system
 - **Markdown Support**: Write pages using Markdown with live rendering
-- **Media Embedding**: Embed YouTube videos and upload custom wiki images
-- **Image Uploads**: Add images when creating wikis with live preview before submission
 - **Revision History**: Track all changes with full version history
 - **Access Control**: Public/private wikis with member management
 - **Admin Dashboard**: Manage users and wikis from a central dashboard
 - **Responsive Design**: Works on desktop and mobile devices
-- **Input Security**: Server-side and client-side protection against HTML/JavaScript injection
+
+### 🎨 UI/UX Features
+
+- ✅ **Dark Mode**: Toggle button in header with persistent storage and smooth transitions across all pages
+- ✅ **Color Themes**: 6 different customizable color schemes for personalization
+- ✅ **Smooth Transitions**: Enhanced visual feedback and animations throughout the interface
+
+### 📸 Media Features
+
+- ✅ **Image Upload**: Users can upload wiki images (PNG, JPG, GIF, WebP; max 5MB) with live preview
+- ✅ **YouTube Embedding**: Embed videos when creating and editing wikis
+- ✅ **Live Preview**: Real-time preview while creating wikis and editing pages
+
+### 🔍 Content & Organization
+
+- ✅ **Search Functionality**: Search across wikis and pages
+- ✅ **Unique Page Slugs**: Auto-generate unique slugs for new pages
+- ✅ **All Pages Tab**: Display all created pages in a wiki
+- ✅ **Wiki Settings**: Edit wiki details including images, videos, name, and description
+
+### 🛡️ Security & Validation
+
+- ✅ **Input Filtering**: Protection against HTML/JavaScript injection (XSS prevention)
+- ✅ **Wiki Validation**: Prevent wiki creation on validation errors
+- ✅ **Server-side Security**: Comprehensive input sanitization and validation
+
+### 💾 Data & Persistence
+
+- ✅ **Persistent Storage**: All data survives Render redeployments
+- ✅ **Image Persistence**: Uploaded images stored on persistent disk
+- ✅ **Database Persistence**: SQLite database preserved across deployments
 
 ## Getting Started
 
