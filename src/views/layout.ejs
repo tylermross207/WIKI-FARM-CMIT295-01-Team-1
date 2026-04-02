@@ -44,9 +44,6 @@
     <nav class="container">
       <a href="/" class="logo">🌱 Wiki Farm</a>
       <div class="nav-links">
-        <!-- Create Wiki Button - Available to ALL users -->
-        <a href="/w/create" class="btn btn-primary">+ Create Wiki</a>
-        
         <% if (user) { %>
           <% if (user.is_admin) { %>
             <a href="/admin">Admin</a>
@@ -58,8 +55,9 @@
             <a href="/auth/logout" class="btn btn-sm">Logout</a>
           </span>
         <% } else { %>
-          <a href="/auth/login" class="btn">Login</a>
+          <a href="/auth/login" class="btn btn-primary">Login</a>
           <a href="/auth/register" class="btn btn-primary">Register</a>
+          <a href="/w/create" class="btn btn-primary">+ Create Wiki</a>
         <% } %>
         
         <!-- Theme Selector - Available to ALL users -->
