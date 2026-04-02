@@ -44,37 +44,49 @@
     <nav class="container">
       <a href="/" class="logo">🌱 Wiki Farm</a>
       <div class="nav-links">
-        <!-- Create Wiki Button (Available to Everyone) -->
-        <a href="/w/create" class="btn btn-primary">+ Create Wiki</a>
-        
         <% if (user) { %>
           <% if (user.is_admin) { %>
             <a href="/admin">Admin</a>
           <% } %>
           <a href="/settings/preferences" class="btn btn-sm">⚙️ Preferences</a>
-        <% } %>
-        
-        <!-- Theme Selector -->
-        <select id="theme-selector" class="theme-selector" onchange="applyTheme(this.value)">
-          <option value="burgundy">Burgundy</option>
-          <option value="ocean">Ocean</option>
-          <option value="forest">Forest</option>
-          <option value="sunset">Sunset</option>
-          <option value="purple">Purple</option>
-          <option value="slate">Slate</option>
-        </select>
-        
-        <!-- Dark Mode Toggle -->
-        <button id="dark-mode-btn" class="dark-mode-btn" onclick="toggleDarkMode()" title="Toggle Dark Mode">
-          🌙
-        </button>
-        
-        <% if (user) { %>
+          
+          <!-- Theme Selector -->
+          <select id="theme-selector" class="theme-selector" onchange="applyTheme(this.value)">
+            <option value="burgundy">Burgundy</option>
+            <option value="ocean">Ocean</option>
+            <option value="forest">Forest</option>
+            <option value="sunset">Sunset</option>
+            <option value="purple">Purple</option>
+            <option value="slate">Slate</option>
+          </select>
+          
+          <!-- Dark Mode Toggle -->
+          <button id="dark-mode-btn" class="dark-mode-btn" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+            🌙
+          </button>
+          
           <span class="user-info">
             👤 <%= user.username %>
             <a href="/auth/logout" class="btn btn-sm">Logout</a>
           </span>
         <% } else { %>
+          <!-- Theme Selector -->
+          <select id="theme-selector" class="theme-selector" onchange="applyTheme(this.value)">
+            <option value="burgundy">Burgundy</option>
+            <option value="ocean">Ocean</option>
+            <option value="forest">Forest</option>
+            <option value="sunset">Sunset</option>
+            <option value="purple">Purple</option>
+            <option value="slate">Slate</option>
+          </select>
+          
+          <!-- Dark Mode Toggle -->
+          <button id="dark-mode-btn" class="dark-mode-btn" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+            🌙
+          </button>
+          
+          <!-- Create Wiki Button (next to Login) -->
+          <a href="/w/create" class="btn btn-primary">+ Create Wiki</a>
           <a href="/auth/login" class="btn">Login</a>
           <a href="/auth/register" class="btn btn-primary">Register</a>
         <% } %>
