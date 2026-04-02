@@ -15,8 +15,11 @@
         <a href="/" class="nav-item">Home</a>
         <a href="/about" class="nav-item">About</a>
         <a href="/contact" class="nav-item">Contact</a>
+        
+        <!-- Create Wiki Button - Available to ALL users -->
+        <a href="/w/create" class="btn btn-primary">+ Create Wiki</a>
+        
         <% if (typeof user !== 'undefined' && user) { %>
-          <a href="/w/create" class="btn btn-primary">Create Wiki</a>
           <% if (user.is_admin) { %>
             <a href="/admin">Admin</a>
           <% } %>
