@@ -321,6 +321,23 @@ main {
 }
 
 /* Wiki List */
+.wiki-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.wiki-list-header h2 {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.wiki-list-header .search-input {
+  margin-bottom: 0;
+}
+
 .wiki-list h2 {
   margin-bottom: 1rem;
 }

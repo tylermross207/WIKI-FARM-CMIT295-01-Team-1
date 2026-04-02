@@ -5,11 +5,6 @@
     <h1>🌱 You Can Wiki Now!</h1>
     <p>Welcome to the WIKI-FARM-CMIT295-01-Team-1 — a place to create, grow, and share knowledge in a friendly, vintage-styled space.</p>
 
-    <div class="search-input" aria-label="Search">
-      <input type="search" name="q" placeholder="Search the farm..." />
-      <button aria-label="Search">🔍</button>
-    </div>
-
     <% if (!user) { %>
       <div class="hero-actions">
         <a href="/auth/register" class="btn btn-primary btn-lg">Get Started</a>
@@ -29,7 +24,13 @@
 </div>
 
 <section class="wiki-list">
-  <h2>Public Wikis</h2>
+  <div class="wiki-list-header">
+    <h2>Public Wikis</h2>
+    <div class="search-input" aria-label="Search">
+      <input type="search" name="q" placeholder="Search the farm..." />
+      <button aria-label="Search">🔍</button>
+    </div>
+  </div>
   <% if (wikis.length === 0) { %>
     <p class="empty-state">No public wikis yet. Be the first to create one!</p>
   <% } else { %>
