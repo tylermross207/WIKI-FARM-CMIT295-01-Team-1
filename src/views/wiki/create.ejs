@@ -1,6 +1,50 @@
 <%- include('../partials/header') %>
 
 <div class="create-wiki-container">
+  <!-- Preview on the LEFT side -->
+  <div class="preview-section">
+    <h2>Preview</h2>
+    <div class="preview-card">
+      <div class="preview-header">
+        <h3 id="previewName">Your Wiki Name</h3>
+        <div class="preview-meta">
+          <span class="preview-slug" id="previewSlug">/w/your-wiki-slug</span>
+        </div>
+      </div>
+
+      <% if (true) { %>
+        <div class="preview-image" id="previewImage" style="display:none;">
+          <img id="previewImageElement" src="" alt="Wiki Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 1rem;">
+        </div>
+      <% } %>
+
+      <% if (true) { %>
+        <div class="preview-video" id="previewVideo" style="display:none;">
+          <div class="youtube-embed-wrapper">
+            <iframe 
+              id="previewIframe"
+              width="100%" 
+              height="315" 
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowfullscreen>
+            </iframe>
+          </div>
+        </div>
+      <% } %>
+
+      <div class="preview-description" id="previewDescription">
+        Your wiki description will appear here
+      </div>
+
+      <div class="preview-badges">
+        <span class="badge" id="publicBadge">🌐 Public</span>
+        <span class="badge" id="editBadge" style="display:none;">✏️ Open Edit</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form on the RIGHT side -->
   <div class="form-section">
     <h1>Create a New Wiki</h1>
     
@@ -35,6 +79,8 @@
       <% } %>
 
       <h2 style="font-size: 1.1rem; margin: 1rem 0 1.5rem;">Wiki Details</h2>
+      
+      <div class="form-group">
         <label for="name">Wiki Name</label>
         <input type="text" id="name" name="name" required autofocus placeholder="My Awesome Wiki">
       </div>
@@ -116,48 +162,6 @@
         <button type="submit" class="btn btn-primary">Create Wiki</button>
       </div>
     </form>
-  </div>
-
-  <div class="preview-section">
-    <h2>Preview</h2>
-    <div class="preview-card">
-      <div class="preview-header">
-        <h3 id="previewName">Your Wiki Name</h3>
-        <div class="preview-meta">
-          <span class="preview-slug" id="previewSlug">/w/your-wiki-slug</span>
-        </div>
-      </div>
-
-      <% if (true) { %>
-        <div class="preview-image" id="previewImage" style="display:none;">
-          <img id="previewImageElement" src="" alt="Wiki Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 1rem;">
-        </div>
-      <% } %>
-
-      <% if (true) { %>
-        <div class="preview-video" id="previewVideo" style="display:none;">
-          <div class="youtube-embed-wrapper">
-            <iframe 
-              id="previewIframe"
-              width="100%" 
-              height="315" 
-              frameborder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-              allowfullscreen>
-            </iframe>
-          </div>
-        </div>
-      <% } %>
-
-      <div class="preview-description" id="previewDescription">
-        Your wiki description will appear here
-      </div>
-
-      <div class="preview-badges">
-        <span class="badge" id="publicBadge">🌐 Public</span>
-        <span class="badge" id="editBadge" style="display:none;">✏️ Open Edit</span>
-      </div>
-    </div>
   </div>
 </div>
 
