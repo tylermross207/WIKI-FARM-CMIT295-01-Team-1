@@ -262,10 +262,10 @@ main {
 .home-hero {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 3rem;
   align-items: center;
   justify-content: center;
-  padding: 2.5rem;
+  padding: 4rem 2.5rem;
   background: transparent;
   margin-bottom: 2rem;
   text-align: center;
@@ -276,21 +276,31 @@ main {
   font-size: 5.2rem;
   color: var(--primary);
   line-height: 0.9;
-  margin-bottom: 0.25rem;
+  margin-bottom: 1rem;
 }
 
 .home-hero p {
   color: var(--text-muted);
   font-size: 1.05rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 2rem;
   max-width: 600px;
+}
+
+.search-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  margin-bottom: 1.5rem;
+  justify-content: center;
 }
 
 .hero-actions {
   display: flex;
-  gap: 1rem;
+  gap: 1.2rem;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .home-hero .hero-left {
