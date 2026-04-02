@@ -74,15 +74,32 @@ router.get('/create', requireAuth, (req, res) => {
 
 // Create wiki handler
 router.post('/create', requireAuth, upload.single('wiki_image'), (req, res) => {
-  const { name, slug, description, youtube_url, is_public, allow_public_edit, firstPageTitle, firstPageContent } = req.body;
+  const { name, slug, description, youtube_url, is_public, allow_public_edit, pageOption, firstPageTitle, firstPageContent } = req.body;
 
   // Sanitize inputs to prevent XSS and HTML injection
   const sanitizedName = stripHtmlTags(sanitizeInput(name || '')).trim();
   const sanitizedSlug = stripHtmlTags(sanitizeInput(slug || '')).trim();
   const sanitizedDescription = stripHtmlTags(sanitizeInput(description || '')).trim();
   const sanitizedYoutubeUrl = sanitizeInput(youtube_url || '').trim();
+  const sanitizedPageOption = stripHtmlTags(sanitizeInput(pageOption || '')).trim();
   const sanitizedFirstPageTitle = stripHtmlTags(sanitizeInput(firstPageTitle || '')).trim();
   const sanitizedFirstPageContent = sanitizeInput(firstPageContent || '').trim();
+
+  // Validate page option is selected
+  if (!sanitizedPageOption || (sanitizedPageOption !== 'new' && sanitizedPageOption !== 'home')) {
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
+    return res.render('wiki/create', { error: 'You must select a page option (Create new or use default home page)' });
+  }
+
+  // If creating new page, validate title
+  if (sanitizedPageOption === 'new' && !sanitizedFirstPageTitle) {
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
+    return res.render('wiki/create', { error: 'Please enter a title for the new page' });
+  }
 
   // Check for suspicious input patterns
   if (isSuspiciousInput(sanitizedName) || isSuspiciousInput(sanitizedDescription) || isSuspiciousInput(sanitizedFirstPageTitle)) {
@@ -149,8 +166,8 @@ router.post('/create', requireAuth, upload.single('wiki_image'), (req, res) => {
       VALUES (?, 'home', 'Welcome', ?, ?)
     `).run(wikiId, welcomeContent, req.session.user.id);
 
-    // If user provided a first page, create it
-    if (sanitizedFirstPageTitle && sanitizedFirstPageContent) {
+    // Handle page option
+    if (sanitizedPageOption === 'new') {
       // Generate slug from title
       const firstPageSlug = sanitizedFirstPageTitle
         .toLowerCase()
@@ -162,11 +179,11 @@ router.post('/create', requireAuth, upload.single('wiki_image'), (req, res) => {
         VALUES (?, ?, ?, ?, ?)
       `).run(wikiId, firstPageSlug, sanitizedFirstPageTitle, sanitizedFirstPageContent, req.session.user.id);
 
-      // Redirect to the first page instead of home
+      // Redirect to the new page
       res.redirect(`/w/${sanitizedSlug}/${firstPageSlug}`);
     } else {
-      // Redirect to home page
-      res.redirect(`/w/${sanitizedSlug}`);
+      // Use default home page
+      res.redirect(`/w/${sanitizedSlug}/home`);
     }
   } catch (err) {
     // Delete uploaded file if it exists

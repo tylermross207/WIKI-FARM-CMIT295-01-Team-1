@@ -61,18 +61,29 @@
 
       <hr style="margin: 2rem 0; border: none; border-top: 2px solid var(--border);">
 
-      <h2 style="font-size: 1.3rem; margin: 1rem 0;">Create First Page (Optional)</h2>
-      <p style="color: var(--text-muted); margin-bottom: 1rem;">Add your first page to the wiki right now. You can create more pages later.</p>
+      <h2 style="font-size: 1.3rem; margin: 1rem 0;">First Page (Required)</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">Every wiki needs a first page. Choose an existing page or create a new one.</p>
 
       <div class="form-group">
-        <label for="firstPageTitle">First Page Title</label>
-        <input type="text" id="firstPageTitle" name="firstPageTitle" placeholder="e.g., Introduction">
-        <small>Leave empty to skip and create pages later</small>
+        <label for="pageOption">Page Option</label>
+        <select id="pageOption" name="pageOption" required onchange="updatePageFields()">
+          <option value="">-- Select an option --</option>
+          <option value="new">Create a new page</option>
+          <option value="home">Use default home page</option>
+        </select>
       </div>
 
-      <div class="form-group">
-        <label for="firstPageContent">First Page Content</label>
-        <textarea id="firstPageContent" name="firstPageContent" rows="8" placeholder="Write your page content here... (Markdown supported)"></textarea>
+      <!-- Create New Page Section -->
+      <div id="newPageSection" style="display: none;">
+        <div class="form-group">
+          <label for="firstPageTitle">New Page Title</label>
+          <input type="text" id="firstPageTitle" name="firstPageTitle" placeholder="e.g., Introduction">
+        </div>
+
+        <div class="form-group">
+          <label for="firstPageContent">New Page Content</label>
+          <textarea id="firstPageContent" name="firstPageContent" rows="8" placeholder="Write your page content here... (Markdown supported)"></textarea>
+        </div>
       </div>
 
       <div class="form-actions">
@@ -232,6 +243,44 @@
 
   // Initial preview update
   updatePreview();
+
+  // Page option management
+  function updatePageFields() {
+    const pageOption = document.getElementById('pageOption').value;
+    const newPageSection = document.getElementById('newPageSection');
+    const firstPageTitle = document.getElementById('firstPageTitle');
+    const firstPageContent = document.getElementById('firstPageContent');
+
+    if (pageOption === 'new') {
+      newPageSection.style.display = 'block';
+      firstPageTitle.required = true;
+      firstPageContent.required = true;
+    } else {
+      newPageSection.style.display = 'none';
+      firstPageTitle.required = false;
+      firstPageContent.required = false;
+    }
+  }
+
+  // Form validation
+  document.getElementById('wikiForm').addEventListener('submit', function(e) {
+    const pageOption = document.getElementById('pageOption').value;
+    if (!pageOption) {
+      e.preventDefault();
+      alert('Please select a page option (Create new or use default home page)');
+      return false;
+    }
+
+    if (pageOption === 'new') {
+      const firstPageTitle = document.getElementById('firstPageTitle').value.trim();
+      if (!firstPageTitle) {
+        e.preventDefault();
+        alert('Please enter a title for the new page');
+        return false;
+      }
+    }
+  });
+
 </script>
 
 <%- include('../partials/footer') %>
