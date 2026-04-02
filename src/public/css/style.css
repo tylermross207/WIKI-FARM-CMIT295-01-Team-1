@@ -252,10 +252,11 @@ main {
 
 /* Footer */
 .main-footer {
-  background: transparent;
+  background: var(--primary);
   padding: 1.5rem 0 3rem;
   text-align: center;
-  color: var(--text-muted);
+  color: var(--white);
+  margin-top: 3rem;
 }
 
 /* Home Page */
