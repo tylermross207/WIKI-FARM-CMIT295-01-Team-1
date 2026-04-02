@@ -260,16 +260,6 @@
   publicCheckbox.addEventListener('change', updatePreview);
   editCheckbox.addEventListener('change', updatePreview);
 
-  // Auto-generate slug from name
-  nameInput.addEventListener('input', function(e) {
-    const slug = e.target.value
-      .toLowerCase()
-      .replace(/\s+/g, '-')
-      .replace(/[^a-z0-9-]/g, '');
-    slugInput.value = slug;
-    updatePreview();
-  });
-
   // Initial preview update
   updatePreview();
 
