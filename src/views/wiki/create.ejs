@@ -8,8 +8,33 @@
       <div class="alert alert-error"><%= error %></div>
     <% } %>
 
+    <% if (!user) { %>
+      <div class="alert alert-info">
+        <strong>Welcome!</strong> Create your account and wiki in one step. No password needed - we'll send you a link to set one later.
+      </div>
+    <% } %>
+
     <form method="POST" action="/w/create" class="wiki-form" id="wikiForm" enctype="multipart/form-data">
-      <div class="form-group">
+      <% if (!user) { %>
+        <h2 style="font-size: 1.1rem; margin: 1rem 0 1.5rem;">Your Account</h2>
+        
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" placeholder="your-username" 
+                 pattern="[a-zA-Z0-9_-]+" title="Alphanumeric, underscore, and hyphen only">
+          <small>Your unique username (3+ characters)</small>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="your@email.com">
+          <small>We'll use this to send you important updates</small>
+        </div>
+
+        <hr style="margin: 2rem 0; border: none; border-top: 2px solid var(--border);">
+      <% } %>
+
+      <h2 style="font-size: 1.1rem; margin: 1rem 0 1.5rem;">Wiki Details</h2>
         <label for="name">Wiki Name</label>
         <input type="text" id="name" name="name" required autofocus placeholder="My Awesome Wiki">
       </div>
@@ -264,6 +289,39 @@
 
   // Form validation
   document.getElementById('wikiForm').addEventListener('submit', function(e) {
+    // Check if username field exists (user not logged in)
+    const usernameField = document.getElementById('username');
+    
+    if (usernameField) {
+      const username = usernameField.value.trim();
+      const email = document.getElementById('email').value.trim();
+      
+      if (!username) {
+        e.preventDefault();
+        alert('Please enter a username');
+        return false;
+      }
+      
+      if (username.length < 3) {
+        e.preventDefault();
+        alert('Username must be at least 3 characters');
+        return false;
+      }
+      
+      if (!email) {
+        e.preventDefault();
+        alert('Please enter an email address');
+        return false;
+      }
+      
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        e.preventDefault();
+        alert('Please enter a valid email address');
+        return false;
+      }
+    }
+
     const pageOption = document.getElementById('pageOption').value;
     if (!pageOption) {
       e.preventDefault();
