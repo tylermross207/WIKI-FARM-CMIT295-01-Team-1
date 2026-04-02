@@ -42,11 +42,42 @@
             <a href="/admin">Admin</a>
           <% } %>
           <a href="/settings/preferences" class="btn btn-sm">⚙️ Preferences</a>
+          
+          <!-- Theme Selector -->
+          <select id="theme-selector" class="theme-selector" onchange="applyTheme(this.value)">
+            <option value="burgundy">Burgundy</option>
+            <option value="ocean">Ocean</option>
+            <option value="forest">Forest</option>
+            <option value="sunset">Sunset</option>
+            <option value="purple">Purple</option>
+            <option value="slate">Slate</option>
+          </select>
+          
+          <!-- Dark Mode Toggle -->
+          <button id="dark-mode-btn" class="dark-mode-btn" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+            🌙
+          </button>
+          
           <span class="user-info">
             👤 <%= user.username %>
             <a href="/auth/logout" class="btn btn-sm">Logout</a>
           </span>
         <% } else { %>
+          <!-- Theme Selector -->
+          <select id="theme-selector" class="theme-selector" onchange="applyTheme(this.value)">
+            <option value="burgundy">Burgundy</option>
+            <option value="ocean">Ocean</option>
+            <option value="forest">Forest</option>
+            <option value="sunset">Sunset</option>
+            <option value="purple">Purple</option>
+            <option value="slate">Slate</option>
+          </select>
+          
+          <!-- Dark Mode Toggle -->
+          <button id="dark-mode-btn" class="dark-mode-btn" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+            🌙
+          </button>
+          
           <a href="/auth/login" class="btn">Login</a>
           <a href="/auth/register" class="btn btn-primary">Register</a>
         <% } %>
@@ -65,5 +96,15 @@
   </footer>
   
   <script src="/js/theme.js"></script>
+  <script>
+    // Initialize theme selector with saved value
+    document.addEventListener('DOMContentLoaded', function() {
+      const selector = document.getElementById('theme-selector');
+      const savedTheme = localStorage.getItem('wiki-farm-theme') || 'burgundy';
+      if (selector) {
+        selector.value = savedTheme;
+      }
+    });
+  </script>
 </body>
 </html>
