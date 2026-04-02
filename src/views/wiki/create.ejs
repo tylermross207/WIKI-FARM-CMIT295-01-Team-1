@@ -59,6 +59,22 @@
         </label>
       </div>
 
+      <hr style="margin: 2rem 0; border: none; border-top: 2px solid var(--border);">
+
+      <h2 style="font-size: 1.3rem; margin: 1rem 0;">Create First Page (Optional)</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">Add your first page to the wiki right now. You can create more pages later.</p>
+
+      <div class="form-group">
+        <label for="firstPageTitle">First Page Title</label>
+        <input type="text" id="firstPageTitle" name="firstPageTitle" placeholder="e.g., Introduction">
+        <small>Leave empty to skip and create pages later</small>
+      </div>
+
+      <div class="form-group">
+        <label for="firstPageContent">First Page Content</label>
+        <textarea id="firstPageContent" name="firstPageContent" rows="8" placeholder="Write your page content here... (Markdown supported)"></textarea>
+      </div>
+
       <div class="form-actions">
         <a href="/" class="btn">Cancel</a>
         <button type="submit" class="btn btn-primary">Create Wiki</button>

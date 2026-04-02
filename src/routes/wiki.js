@@ -74,16 +74,18 @@ router.get('/create', requireAuth, (req, res) => {
 
 // Create wiki handler
 router.post('/create', requireAuth, upload.single('wiki_image'), (req, res) => {
-  const { name, slug, description, youtube_url, is_public, allow_public_edit } = req.body;
+  const { name, slug, description, youtube_url, is_public, allow_public_edit, firstPageTitle, firstPageContent } = req.body;
 
   // Sanitize inputs to prevent XSS and HTML injection
   const sanitizedName = stripHtmlTags(sanitizeInput(name || '')).trim();
   const sanitizedSlug = stripHtmlTags(sanitizeInput(slug || '')).trim();
   const sanitizedDescription = stripHtmlTags(sanitizeInput(description || '')).trim();
   const sanitizedYoutubeUrl = sanitizeInput(youtube_url || '').trim();
+  const sanitizedFirstPageTitle = stripHtmlTags(sanitizeInput(firstPageTitle || '')).trim();
+  const sanitizedFirstPageContent = sanitizeInput(firstPageContent || '').trim();
 
   // Check for suspicious input patterns
-  if (isSuspiciousInput(sanitizedName) || isSuspiciousInput(sanitizedDescription)) {
+  if (isSuspiciousInput(sanitizedName) || isSuspiciousInput(sanitizedDescription) || isSuspiciousInput(sanitizedFirstPageTitle)) {
     // Delete uploaded file if it exists
     if (req.file) {
       fs.unlinkSync(req.file.path);
@@ -138,14 +140,34 @@ router.post('/create', requireAuth, upload.single('wiki_image'), (req, res) => {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `).run(sanitizedSlug, sanitizedName, sanitizedDescription, sanitizedYoutubeUrl || null, imagePath, req.session.user.id, is_public ? 1 : 0, allow_public_edit ? 1 : 0);
 
+    const wikiId = result.lastInsertRowid;
+
     // Create a default home page
     const welcomeContent = `# Welcome to ${sanitizedName}\n\nThis is your wiki's home page. Click **Edit** to customize it!`;
     db.prepare(`
       INSERT INTO pages (wiki_id, slug, title, content, created_by)
       VALUES (?, 'home', 'Welcome', ?, ?)
-    `).run(result.lastInsertRowid, welcomeContent, req.session.user.id);
+    `).run(wikiId, welcomeContent, req.session.user.id);
 
-    res.redirect(`/w/${sanitizedSlug}`);
+    // If user provided a first page, create it
+    if (sanitizedFirstPageTitle && sanitizedFirstPageContent) {
+      // Generate slug from title
+      const firstPageSlug = sanitizedFirstPageTitle
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, '');
+
+      db.prepare(`
+        INSERT INTO pages (wiki_id, slug, title, content, created_by)
+        VALUES (?, ?, ?, ?, ?)
+      `).run(wikiId, firstPageSlug, sanitizedFirstPageTitle, sanitizedFirstPageContent, req.session.user.id);
+
+      // Redirect to the first page instead of home
+      res.redirect(`/w/${sanitizedSlug}/${firstPageSlug}`);
+    } else {
+      // Redirect to home page
+      res.redirect(`/w/${sanitizedSlug}`);
+    }
   } catch (err) {
     // Delete uploaded file if it exists
     if (req.file) {
