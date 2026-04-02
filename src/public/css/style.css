@@ -261,12 +261,14 @@ main {
 /* Home Page */
 .home-hero {
   display: flex;
+  flex-direction: column;
   gap: 2rem;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 2.5rem;
   background: transparent;
   margin-bottom: 2rem;
+  text-align: center;
 }
 
 .home-hero h1 {
@@ -281,21 +283,24 @@ main {
   color: var(--text-muted);
   font-size: 1.05rem;
   margin-bottom: 1.25rem;
+  max-width: 600px;
 }
 
 .hero-actions {
   display: flex;
   gap: 1rem;
   align-items: center;
+  justify-content: center;
 }
 
 .home-hero .hero-left {
-  max-width: 60%;
+  max-width: 100%;
 }
 
 .home-hero .hero-right {
   max-width: 35%;
-  text-align: right;
+  text-align: center;
+  display: none;
 }
 
 .home-hero .hero-right img {
