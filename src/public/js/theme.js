@@ -83,8 +83,17 @@ function applyTheme(themeName) {
   root.style.setProperty('--border', theme.border);
   root.style.setProperty('--bg', theme.bg);
   
+  // Update body background color for better visibility
+  document.body.style.backgroundColor = theme.bg;
+  
   // Save to localStorage
   localStorage.setItem('wiki-farm-theme', themeName);
+  
+  // Update theme selector if it exists
+  const selector = document.getElementById('theme-selector');
+  if (selector) {
+    selector.value = themeName;
+  }
 }
 
 function loadSavedTheme() {
