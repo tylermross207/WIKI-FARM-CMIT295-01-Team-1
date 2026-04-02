@@ -1,6 +1,7 @@
 const express = require('express');
 const { marked } = require('marked');
 const sanitizeHtml = require('sanitize-html');
+const PDFDocument = require('pdfkit');
 const db = require('../db/database');
 const { requireAuth } = require('../middleware/auth');
 
@@ -248,6 +249,88 @@ router.get('/:wikiSlug/:pageSlug/revision/:revisionId', (req, res) => {
   const renderedContent = renderMarkdown(revision.content, wikiSlug);
 
   res.render('page/revision', { wiki, page, revision, content: renderedContent });
+});
+
+// Export page as PDF
+router.get('/:wikiSlug/:pageSlug/export/pdf', (req, res) => {
+  const { wikiSlug, pageSlug } = req.params;
+
+  const wiki = db.prepare('SELECT * FROM wikis WHERE slug = ?').get(wikiSlug);
+  if (!wiki) {
+    return res.status(404).render('error', { message: 'Wiki not found', error: {} });
+  }
+
+  // Check access for private wikis
+  if (!wiki.is_public && !req.session.user) {
+    return res.status(403).json({ error: 'Access denied' });
+  }
+
+  const page = db.prepare('SELECT * FROM pages WHERE wiki_id = ? AND slug = ?').get(wiki.id, pageSlug);
+  if (!page) {
+    return res.status(404).json({ error: 'Page not found' });
+  }
+
+  try {
+    // Create PDF document
+    const doc = new PDFDocument({
+      bufferPages: true,
+      margin: 50
+    });
+
+    // Set response headers
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${pageSlug}.pdf"`);
+
+    // Pipe PDF to response
+    doc.pipe(res);
+
+    // Add title
+    doc.fontSize(24).font('Helvetica-Bold').text(page.title, { align: 'left' });
+    
+    // Add wiki and page info
+    doc.fontSize(10).font('Helvetica').fillColor('#666666');
+    doc.text(`Wiki: ${wiki.name}`, { align: 'left' });
+    doc.text(`Created: ${new Date(page.created_at).toLocaleDateString()}`, { align: 'left' });
+    if (page.updated_at && page.updated_at !== page.created_at) {
+      doc.text(`Updated: ${new Date(page.updated_at).toLocaleDateString()}`, { align: 'left' });
+    }
+    
+    // Add spacing
+    doc.moveDown(0.5);
+    doc.strokeColor('#CCCCCC').lineWidth(1).moveTo(50, doc.y).lineTo(545, doc.y).stroke();
+    doc.moveDown(0.5);
+
+    // Convert markdown to plain text (basic conversion)
+    const plainText = page.content
+      .replace(/^### (.*?)$/gm, '$1')
+      .replace(/^## (.*?)$/gm, '$1')
+      .replace(/^# (.*?)$/gm, '$1')
+      .replace(/\*\*(.*?)\*\*/g, '$1')
+      .replace(/\*(.*?)\*/g, '$1')
+      .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')
+      .replace(/`([^`]+)`/g, '$1')
+      .replace(/```[\s\S]*?```/g, '')
+      .replace(/---/g, '');
+
+    // Add content
+    doc.fontSize(11).font('Helvetica').fillColor('#000000');
+    doc.text(plainText, {
+      align: 'left',
+      width: 445,
+      lineGap: 5
+    });
+
+    // Add footer
+    doc.fontSize(9).font('Helvetica').fillColor('#999999');
+    doc.moveDown(1);
+    doc.text(`Exported from Wiki Farm on ${new Date().toLocaleString()}`, { align: 'center' });
+
+    // Finalize PDF
+    doc.end();
+  } catch (err) {
+    console.error('PDF export error:', err);
+    res.status(500).json({ error: 'Failed to generate PDF' });
+  }
 });
 
 // Delete page
