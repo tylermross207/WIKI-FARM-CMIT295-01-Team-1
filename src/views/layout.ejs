@@ -3,10 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title><%= typeof title !== 'undefined' ? title + ' - ' : '' %>Wiki Farm</title>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css?v=<%= Date.now() %>">
   <script>
+    // Clear unnecessary cookies on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const cookieList = document.cookie.split(';');
+      const preservedCookies = ['connect.sid']; // Keep session cookie
+      
+      cookieList.forEach(function(cookie) {
+        const cookieName = cookie.split('=')[0].trim();
+        if (!preservedCookies.includes(cookieName) && cookieName) {
+          document.cookie = cookieName + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        }
+      });
+    });
+
     // Apply theme before page renders to avoid flash
     (function() {
       const THEMES = {
