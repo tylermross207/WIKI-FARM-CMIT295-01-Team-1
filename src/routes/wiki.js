@@ -127,11 +127,20 @@ router.post('/create', upload.single('wiki_image'), async (req, res) => {
       return res.render('wiki/create', { error: 'This username is already taken', user: req.session.user });
     }
 
+    // Check if email already exists
+    const existingEmail = db.prepare('SELECT id FROM users WHERE email = ?').get(sanitizedEmail);
+    if (existingEmail) {
+      if (req.file) {
+        fs.unlinkSync(req.file.path);
+      }
+      return res.render('wiki/create', { error: 'This email is already registered', user: req.session.user });
+    }
+
     // Create a temporary account for the user
     try {
       const hashedPassword = await bcrypt.hash('TempPassword123!', 10);
       const result = db.prepare(`
-        INSERT INTO users (username, email, password, is_admin)
+        INSERT INTO users (username, email, password_hash, is_admin)
         VALUES (?, ?, ?, ?)
       `).run(sanitizedUsername, sanitizedEmail, hashedPassword, 0);
       
@@ -148,8 +157,8 @@ router.post('/create', upload.single('wiki_image'), async (req, res) => {
       if (req.file) {
         fs.unlinkSync(req.file.path);
       }
-      console.error(err);
-      return res.render('wiki/create', { error: 'Failed to create user account', user: req.session.user });
+      console.error('User creation error:', err);
+      return res.render('wiki/create', { error: 'Failed to create user account: ' + err.message, user: req.session.user });
     }
   }
 
