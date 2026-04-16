@@ -520,20 +520,28 @@ main {
 
 /* New Page Section with Preview - Side by Side Layout */
 .new-page-layout {
-  display: grid;
-  grid-template-columns: 1fr 350px;
-  gap: 2rem;
-  align-items: start;
+  display: grid !important;
+  grid-template-columns: 1fr 350px !important;
+  gap: 2rem !important;
+  align-items: start !important;
+  margin: 0 auto !important;
+  padding: 0 1rem !important;
+  max-width: 1400px !important;
+  width: 100% !important;
 }
 
 .new-page-form {
-  grid-column: 1;
+  grid-column: 1 !important;
+  background: var(--white);
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 
 .new-page-preview {
-  grid-column: 2;
-  position: sticky;
-  top: 100px;
+  grid-column: 2 !important;
+  position: sticky !important;
+  top: 100px !important;
 }
 
 .new-page-preview h3 {
