@@ -4,39 +4,88 @@
   <h1><a href="/w/<%= wiki.slug %>"><%= wiki.name %></a></h1>
 </div>
 
-<div class="edit-page">
-  <h2><%= isNew ? 'Create New Page' : 'Edit: ' + page.title %></h2>
-  
-  <% if (error) { %>
-    <div class="alert alert-error"><%= error %></div>
-  <% } %>
-
-  <form method="POST" action="/w/<%= wiki.slug %>/<%= page.slug %>/edit" class="page-form">
-    <div class="form-group">
-      <label for="title">Page Title</label>
-      <input type="text" id="title" name="title" value="<%= page.title %>" required>
-    </div>
-
-    <div class="form-group">
-      <label for="content">Content (Markdown)</label>
-      <div class="editor-help">
-        <span>Supports Markdown: **bold**, *italic*, # headings, [links](url), etc.</span>
+<div class="edit-page-container">
+  <!-- Preview on LEFT -->
+  <div class="page-preview-section">
+    <h3>Preview</h3>
+    <div class="preview-card">
+      <div class="preview-header">
+        <h3 id="pagePreviewTitle">Page Title</h3>
       </div>
-      <textarea id="content" name="content" rows="20" class="code-editor"><%= page.content %></textarea>
-    </div>
-
-    <% if (!isNew) { %>
-      <div class="form-group">
-        <label for="edit_summary">Edit Summary (optional)</label>
-        <input type="text" id="edit_summary" name="edit_summary" placeholder="Briefly describe your changes">
+      <div class="preview-content" id="pagePreviewContent" style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.03); border-radius: 8px; min-height: 200px; max-height: 500px; overflow-y: auto;">
+        Page content will appear here
       </div>
+    </div>
+  </div>
+
+  <!-- Form on RIGHT -->
+  <div class="edit-page">
+    <h2><%= isNew ? 'Create New Page' : 'Edit: ' + page.title %></h2>
+    
+    <% if (error) { %>
+      <div class="alert alert-error"><%= error %></div>
     <% } %>
 
-    <div class="form-actions">
-      <a href="/w/<%= wiki.slug %>/<%= isNew ? '' : page.slug %>" class="btn">Cancel</a>
-      <button type="submit" class="btn btn-primary"><%= isNew ? 'Create Page' : 'Save Changes' %></button>
-    </div>
-  </form>
+    <form method="POST" action="/w/<%= wiki.slug %>/<%= page.slug %>/edit" class="page-form">
+      <div class="form-group">
+        <label for="title">Page Title</label>
+        <input type="text" id="title" name="title" value="<%= page.title %>" required>
+      </div>
+
+      <div class="form-group">
+        <label for="content">Content (Markdown)</label>
+        <div class="editor-help">
+          <span>Supports Markdown: **bold**, *italic*, # headings, [links](url), etc.</span>
+        </div>
+        <textarea id="content" name="content" rows="20" class="code-editor"><%= page.content %></textarea>
+      </div>
+
+      <% if (!isNew) { %>
+        <div class="form-group">
+          <label for="edit_summary">Edit Summary (optional)</label>
+          <input type="text" id="edit_summary" name="edit_summary" placeholder="Briefly describe your changes">
+        </div>
+      <% } %>
+
+      <div class="form-actions">
+        <a href="/w/<%= wiki.slug %>/<%= isNew ? '' : page.slug %>" class="btn">Cancel</a>
+        <button type="submit" class="btn btn-primary"><%= isNew ? 'Create Page' : 'Save Changes' %></button>
+      </div>
+    </form>
+  </div>
 </div>
+
+<script>
+  // Get preview elements
+  const titleInput = document.getElementById('title');
+  const contentInput = document.getElementById('content');
+  const previewTitle = document.getElementById('pagePreviewTitle');
+  const previewContent = document.getElementById('pagePreviewContent');
+
+  // Function to strip HTML tags
+  function stripHtmlTags(input) {
+    if (!input) return '';
+    let cleaned = input.replace(/<[^>]*>/g, '');
+    cleaned = cleaned.replace(/javascript:/gi, '');
+    cleaned = cleaned.replace(/on\w+\s*=/gi, '');
+    return cleaned.trim();
+  }
+
+  // Update preview
+  function updatePagePreview() {
+    const title = titleInput.value;
+    const content = contentInput.value;
+    
+    previewTitle.textContent = stripHtmlTags(title) || 'Page Title';
+    previewContent.textContent = stripHtmlTags(content) || 'Page content will appear here';
+  }
+
+  // Add event listeners
+  titleInput.addEventListener('input', updatePagePreview);
+  contentInput.addEventListener('input', updatePagePreview);
+
+  // Initial update
+  updatePagePreview();
+</script>
 
 <%- include('../partials/footer') %>

@@ -539,6 +539,37 @@ main {
   border-top: none !important;
 }
 
+/* Page Editor Container with Live Preview */
+.edit-page-container {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 2rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+  max-width: 1400px;
+}
+
+.page-preview-section {
+  position: sticky;
+  top: 2rem;
+}
+
+.page-preview-section h3 {
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+.edit-page {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.edit-page h2 {
+  margin-bottom: 1.5rem;
+}
+
 .preview-section h2 {
   margin-bottom: 1rem;
   color: var(--text);
@@ -1400,5 +1431,35 @@ body.dark-mode h4,
 body.dark-mode h5,
 body.dark-mode h6 {
   color: #e0e0e0;
+}
+
+body.dark-mode .edit-page-container {
+  background: transparent;
+}
+
+body.dark-mode .edit-page {
+  background: #161b22;
+  color: #c9d1d9;
+  border-color: #30363d;
+}
+
+body.dark-mode .page-preview-section {
+  background: transparent;
+}
+
+body.dark-mode .page-preview-section h3 {
+  color: #f0f6fc;
+}
+
+body.dark-mode .preview-card {
+  background: #161b22;
+  border-color: #30363d;
+  color: #c9d1d9;
+}
+
+body.dark-mode .preview-content {
+  background: #0d1117 !important;
+  border-color: #30363d !important;
+  color: #c9d1d9;
 }
 
