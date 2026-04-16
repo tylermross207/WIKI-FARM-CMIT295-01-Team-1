@@ -96,10 +96,34 @@ router.get('/:wikiSlug/:pageSlug', (req, res) => {
 
   // This SQL query doesn't work. -Rylan
   // Simplified query
-  const page = db.prepare('SELECT * FROM pages WHERE wiki_id = ? AND slug = ?').get(wiki.id, pageSlug);
+  let page = db.prepare('SELECT * FROM pages WHERE wiki_id = ? AND slug = ?').get(wiki.id, pageSlug);
+
+  // If page doesn't exist and user can edit, auto-create it
+  if (!page && canEdit(wiki, req.session.user)) {
+    const pageTitle = pageSlug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    const pageContent = `# ${pageTitle}\n\nWrite your content here...`;
+    
+    try {
+      db.prepare(`
+        INSERT INTO pages (wiki_id, slug, title, content, created_by)
+        VALUES (?, ?, ?, ?, ?)
+      `).run(wiki.id, pageSlug, pageTitle, pageContent, req.session.user?.id || null);
+      
+      // Fetch the newly created page
+      page = db.prepare('SELECT * FROM pages WHERE wiki_id = ? AND slug = ?').get(wiki.id, pageSlug);
+    } catch (err) {
+      console.error('Error auto-creating page:', err);
+      // Fall back to not-found page if auto-creation fails
+      return res.render('page/not-found', { 
+        wiki, 
+        pageSlug,
+        canEdit: canEdit(wiki, req.session.user)
+      });
+    }
+  }
 
   if (!page) {
-    // Page doesn't exist - offer to create it
+    // Page doesn't exist and user cannot edit - show not-found page
     return res.render('page/not-found', { 
       wiki, 
       pageSlug,
