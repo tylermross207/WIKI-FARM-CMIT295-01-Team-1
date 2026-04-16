@@ -42,19 +42,6 @@
         <span class="badge" id="editBadge" style="display:none;">✏️ Open Edit</span>
       </div>
     </div>
-
-    <!-- Page Preview Section (shown when creating new page) -->
-    <div id="pagePreviewSection" style="display: none; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border);">
-      <h3 style="margin-bottom: 1rem;">First Page Preview</h3>
-      <div class="preview-card">
-        <div class="preview-header">
-          <h3 id="pagePreviewTitle" style="word-break: break-word;">Your Page Title</h3>
-        </div>
-        <div class="preview-content" id="pagePreviewContent" style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.03); border-radius: 8px; min-height: 100px; max-height: 300px; overflow-y: auto;">
-          Your page content will appear here
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- Form on the RIGHT side -->
@@ -167,6 +154,19 @@
         <div class="form-group">
           <label for="firstPageContent">New Page Content</label>
           <textarea id="firstPageContent" name="firstPageContent" rows="8" placeholder="Write your page content here... (Markdown supported)"></textarea>
+        </div>
+
+        <!-- Page Preview Section (shown next to form when creating new page) -->
+        <div id="pagePreviewSection" style="display: none; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+          <h3 style="margin-bottom: 1rem;">First Page Preview</h3>
+          <div class="preview-card">
+            <div class="preview-header">
+              <h3 id="pagePreviewTitle" style="word-break: break-word;">Your Page Title</h3>
+            </div>
+            <div class="preview-content" id="pagePreviewContent" style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.03); border-radius: 8px; min-height: 100px; max-height: 300px; overflow-y: auto;">
+              Your page content will appear here
+            </div>
+          </div>
         </div>
       </div>
 
