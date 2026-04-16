@@ -1,52 +1,84 @@
 <%- include('../partials/header') %>
 
-<div class="form-page">
-  <h1>Wiki Settings: <%= wiki.name %></h1>
-  
-  <% if (error) { %>
-    <div class="alert alert-error"><%= error %></div>
-  <% } %>
-  <% if (success) { %>
-    <div class="alert alert-success"><%= success %></div>
-  <% } %>
+<div class="wiki-settings-container">
+  <!-- Preview on LEFT -->
+  <div class="wiki-preview-section">
+    <h3>Preview</h3>
+    <div class="preview-card">
+      <div class="preview-header">
+        <h3 id="previewName"><%= wiki.name %></h3>
+        <div class="preview-meta">
+          <span class="preview-slug" id="previewSlug">/w/<%= wiki.slug %></span>
+        </div>
+      </div>
 
-  <form method="POST" action="/w/<%= wiki.slug %>/settings" class="wiki-form">
-    <div class="form-group">
-      <label for="name">Wiki Name</label>
-      <input type="text" id="name" name="name" value="<%= wiki.name %>" required>
+      <div class="preview-image" id="previewImage" <% if (!wiki.wiki_image_path) { %>style="display:none;"<% } %>>
+        <img id="previewImageElement" src="<%= wiki.wiki_image_path %>" alt="Wiki Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 1rem;">
+      </div>
+
+      <div class="preview-description" id="previewDescription">
+        <%= wiki.description || 'Your wiki description will appear here' %>
+      </div>
+
+      <div class="preview-badges">
+        <span class="badge" id="publicBadge" <% if (!wiki.is_public) { %>style="display:none;"<% } %>>🌐 Public</span>
+        <span class="badge" id="privateBadge" <% if (wiki.is_public) { %>style="display:none;"<% } %>>🔒 Private</span>
+        <span class="badge" id="editBadge" <% if (!wiki.allow_public_edit) { %>style="display:none;"<% } %>>✏️ Open Edit</span>
+      </div>
     </div>
+  </div>
 
-    <div class="form-group">
-      <label>URL Slug</label>
-      <input type="text" value="<%= wiki.slug %>" disabled>
-      <small>The slug cannot be changed after creation</small>
-    </div>
+  <!-- Form on RIGHT -->
+  <div class="wiki-settings-form">
+    <h1>Wiki Settings: <%= wiki.name %></h1>
+    
+    <% if (error) { %>
+      <div class="alert alert-error"><%= error %></div>
+    <% } %>
+    <% if (success) { %>
+      <div class="alert alert-success"><%= success %></div>
+    <% } %>
 
-    <div class="form-group">
-      <label for="description">Description</label>
-      <textarea id="description" name="description" rows="3"><%= wiki.description %></textarea>
-    </div>
+    <form method="POST" action="/w/<%= wiki.slug %>/settings" class="wiki-form" id="settingsForm" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="name">Wiki Name</label>
+        <input type="text" id="name" name="name" value="<%= wiki.name %>" required>
+      </div>
 
-    <div class="form-group">
-      <label class="checkbox-label">
-        <input type="checkbox" name="is_public" <%= wiki.is_public ? 'checked' : '' %>>
-        <span>Public wiki</span>
-      </label>
-    </div>
+      <div class="form-group">
+        <label>URL Slug</label>
+        <input type="text" value="<%= wiki.slug %>" disabled>
+        <small>The slug cannot be changed after creation</small>
+      </div>
 
-    <div class="form-group">
-      <label class="checkbox-label">
-        <input type="checkbox" name="allow_public_edit" <%= wiki.allow_public_edit ? 'checked' : '' %>>
-        <span>Allow anyone to edit</span>
-      </label>
-    </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="3"><%= wiki.description %></textarea>
+      </div>
 
-    <div class="form-actions">
-      <a href="/w/<%= wiki.slug %>" class="btn">Back to Wiki</a>
-      <button type="submit" class="btn btn-primary">Save Settings</button>
-    </div>
-  </form>
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input type="checkbox" name="is_public" id="isPublic" <%= wiki.is_public ? 'checked' : '' %>>
+          <span>Public wiki</span>
+        </label>
+      </div>
 
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input type="checkbox" name="allow_public_edit" id="allowPublicEdit" <%= wiki.allow_public_edit ? 'checked' : '' %>>
+          <span>Allow anyone to edit</span>
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <a href="/w/<%= wiki.slug %>" class="btn">Back to Wiki</a>
+        <button type="submit" class="btn btn-primary">Save Settings</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="wiki-settings-extras">
   <hr>
 
   <section class="members-section">
@@ -95,5 +127,64 @@
     </form>
   </section>
 </div>
+
+<script>
+  // Get form elements
+  const nameInput = document.getElementById('name');
+  const descriptionInput = document.getElementById('description');
+  const isPublicCheckbox = document.getElementById('isPublic');
+  const allowPublicEditCheckbox = document.getElementById('allowPublicEdit');
+
+  // Get preview elements
+  const previewName = document.getElementById('previewName');
+  const previewDescription = document.getElementById('previewDescription');
+  const publicBadge = document.getElementById('publicBadge');
+  const privateBadge = document.getElementById('privateBadge');
+  const editBadge = document.getElementById('editBadge');
+
+  // Function to strip HTML tags
+  function stripHtmlTags(input) {
+    if (!input) return '';
+    let cleaned = input.replace(/<[^>]*>/g, '');
+    cleaned = cleaned.replace(/javascript:/gi, '');
+    cleaned = cleaned.replace(/on\w+\s*=/gi, '');
+    return cleaned.trim();
+  }
+
+  // Update preview
+  function updateWikiPreview() {
+    const name = nameInput.value;
+    const description = descriptionInput.value;
+    const isPublic = isPublicCheckbox.checked;
+    const allowPublicEdit = allowPublicEditCheckbox.checked;
+
+    // Update name
+    previewName.textContent = stripHtmlTags(name) || 'Your Wiki Name';
+
+    // Update description
+    previewDescription.textContent = stripHtmlTags(description) || 'Your wiki description will appear here';
+
+    // Update badges
+    if (isPublic) {
+      publicBadge.style.display = 'inline-block';
+      privateBadge.style.display = 'none';
+    } else {
+      publicBadge.style.display = 'none';
+      privateBadge.style.display = 'inline-block';
+    }
+
+    if (allowPublicEdit) {
+      editBadge.style.display = 'inline-block';
+    } else {
+      editBadge.style.display = 'none';
+    }
+  }
+
+  // Add event listeners
+  nameInput.addEventListener('input', updateWikiPreview);
+  descriptionInput.addEventListener('input', updateWikiPreview);
+  isPublicCheckbox.addEventListener('change', updateWikiPreview);
+  allowPublicEditCheckbox.addEventListener('change', updateWikiPreview);
+</script>
 
 <%- include('../partials/footer') %>
