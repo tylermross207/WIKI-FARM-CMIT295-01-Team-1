@@ -518,7 +518,29 @@ main {
   top: 2rem;
 }
 
-/* New Page Section with Preview */
+/* New Page Section with Preview - Side by Side Layout */
+.new-page-layout {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 2rem;
+  align-items: start;
+}
+
+.new-page-form {
+  grid-column: 1;
+}
+
+.new-page-preview {
+  grid-column: 2;
+  position: sticky;
+  top: 100px;
+}
+
+.new-page-preview h3 {
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
 #newPageSection {
   display: grid;
   grid-template-columns: 1fr 350px;
@@ -1461,5 +1483,13 @@ body.dark-mode .preview-content {
   background: #0d1117 !important;
   border-color: #30363d !important;
   color: #c9d1d9;
+}
+
+body.dark-mode .new-page-preview h3 {
+  color: #f0f6fc;
+}
+
+body.dark-mode .new-page-preview {
+  background: transparent;
 }
 

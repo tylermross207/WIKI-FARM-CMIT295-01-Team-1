@@ -145,20 +145,22 @@
       </div>
 
       <!-- Create New Page Section -->
-      <div id="newPageSection" style="display: none;">
-        <div class="form-group">
-          <label for="firstPageTitle">New Page Title</label>
-          <input type="text" id="firstPageTitle" name="firstPageTitle" placeholder="e.g., Introduction">
-        </div>
+      <div id="newPageSection" style="display: none;" class="new-page-layout">
+        <div id="newPageForm" class="new-page-form">
+          <div class="form-group">
+            <label for="firstPageTitle">New Page Title</label>
+            <input type="text" id="firstPageTitle" name="firstPageTitle" placeholder="e.g., Introduction">
+          </div>
 
-        <div class="form-group">
-          <label for="firstPageContent">New Page Content</label>
-          <textarea id="firstPageContent" name="firstPageContent" rows="8" placeholder="Write your page content here... (Markdown supported)"></textarea>
+          <div class="form-group">
+            <label for="firstPageContent">New Page Content</label>
+            <textarea id="firstPageContent" name="firstPageContent" rows="8" placeholder="Write your page content here... (Markdown supported)"></textarea>
+          </div>
         </div>
 
         <!-- Page Preview Section (shown next to form when creating new page) -->
-        <div id="pagePreviewSection" style="display: none; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border);">
-          <h3 style="margin-bottom: 1rem;">First Page Preview</h3>
+        <div id="pagePreviewSection" class="new-page-preview">
+          <h3>First Page Preview</h3>
           <div class="preview-card">
             <div class="preview-header">
               <h3 id="pagePreviewTitle" style="word-break: break-word;">Your Page Title</h3>
