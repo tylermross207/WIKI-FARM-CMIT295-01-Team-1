@@ -63,15 +63,15 @@
           <% } %>
         <% } %>
         
-        <!-- Theme Selector -->
-        <select id="theme-selector" class="theme-selector" onchange="applyTheme(this.value)">
+        <!-- Theme Selector (Disabled feature) -->
+        <!-- <select id="theme-selector" class="theme-selector" onchange="applyTheme(this.value)">
           <option value="burgundy">Burgundy</option>
           <option value="ocean">Ocean</option>
           <option value="forest">Forest</option>
           <option value="sunset">Sunset</option>
           <option value="purple">Purple</option>
           <option value="slate">Slate</option>
-        </select>
+        </select> -->
         <script>
           const savedTheme = localStorage.getItem('wiki-farm-theme') || 'burgundy';
           const selector = document.getElementById('theme-selector');
