@@ -600,9 +600,10 @@ main {
 
 .preview-section {
   position: sticky;
-  top: 2rem;
+  top: 100px;
   display: block;
   visibility: visible;
+  height: fit-content;
 }
 
 /* Wiki Settings Container with Live Preview */
