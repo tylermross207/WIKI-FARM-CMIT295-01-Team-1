@@ -163,19 +163,18 @@
       </div>
     </form>
   </div>
-</div>
 
-<!-- Create New Page Section - With preview displayed outside the form -->
-<div id="newPageSection" style="display: none;" class="new-page-layout">
-  <!-- This div now only contains the preview, form fields are inside the form above -->
-  <div id="pagePreviewSection" class="new-page-preview">
-    <h3>Page Preview</h3>
-    <div class="preview-card">
-      <div class="preview-header">
-        <h3 id="pagePreviewTitle" style="word-break: break-word;">Your Page Title</h3>
-      </div>
-      <div class="preview-content" id="pagePreviewContent" style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.03); border-radius: 8px; min-height: 100px; max-height: 300px; overflow-y: auto;">
-        Your page content will appear here
+  <!-- Page Preview Section - shown beside form when creating new page -->
+  <div id="pagePreviewContainer" style="display: none;">
+    <div id="pagePreviewSection" class="page-preview-card">
+      <h2>Page Preview</h2>
+      <div class="preview-card">
+        <div class="preview-header">
+          <h3 id="pagePreviewTitle" style="word-break: break-word;">Your Page Title</h3>
+        </div>
+        <div class="preview-content" id="pagePreviewContent" style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.03); border-radius: 8px; min-height: 100px; max-height: 300px; overflow-y: auto;">
+          Your page content will appear here
+        </div>
       </div>
     </div>
   </div>
@@ -283,22 +282,22 @@
   function updatePageFields() {
     const pageOption = document.getElementById('pageOption').value;
     const newPageFields = document.getElementById('newPageFields');
-    const newPageSection = document.getElementById('newPageSection');
-    const pagePreviewSection = document.getElementById('pagePreviewSection');
+    const pagePreviewContainer = document.getElementById('pagePreviewContainer');
+    const formSection = document.querySelector('.form-section');
     const firstPageTitle = document.getElementById('firstPageTitle');
     const firstPageContent = document.getElementById('firstPageContent');
 
     if (pageOption === 'new') {
       newPageFields.style.display = 'block';
-      newPageSection.style.display = 'block';
-      pagePreviewSection.style.display = 'block';
+      pagePreviewContainer.style.display = 'block';
+      formSection.classList.add('with-preview');
       firstPageTitle.required = true;
       firstPageContent.required = true;
       updatePagePreview();
     } else {
       newPageFields.style.display = 'none';
-      newPageSection.style.display = 'none';
-      pagePreviewSection.style.display = 'none';
+      pagePreviewContainer.style.display = 'none';
+      formSection.classList.remove('with-preview');
       firstPageTitle.required = false;
       firstPageContent.required = false;
     }

@@ -509,6 +509,39 @@ main {
   box-shadow: var(--shadow);
 }
 
+/* When page preview is visible, make form-section a grid */
+.form-section.with-preview {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.form-section.with-preview form {
+  grid-column: 2;
+}
+
+.form-section.with-preview #pagePreviewContainer {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+#pagePreviewContainer {
+  display: none;
+}
+
+.page-preview-card {
+  position: sticky;
+  top: 100px;
+}
+
+.page-preview-card h2 {
+  margin-bottom: 1rem;
+  color: var(--text);
+  font-size: 1.2rem;
+}
+
+/* When preview is visible, hide new-page-layout */
 .form-section h1 {
   margin-bottom: 1.5rem;
 }
@@ -516,61 +549,6 @@ main {
 .preview-section {
   position: sticky;
   top: 2rem;
-}
-
-/* New Page Section with Preview - Side by Side Layout */
-.new-page-layout {
-  display: grid !important;
-  grid-template-columns: 350px 1fr !important;
-  gap: 2rem !important;
-  align-items: start !important;
-  margin: 0 auto !important;
-  padding: 0 1rem !important;
-  max-width: 1400px !important;
-  width: 100% !important;
-}
-
-.new-page-form {
-  grid-column: 2 !important;
-  background: var(--white);
-  padding: 2rem;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-}
-
-.new-page-preview {
-  grid-column: 1 !important;
-  position: sticky !important;
-  top: 100px !important;
-}
-
-.new-page-preview h3 {
-  margin-bottom: 1rem;
-  color: var(--text);
-}
-
-#newPageSection {
-  display: none !important;
-  grid-template-columns: 350px 1fr;
-  gap: 2rem;
-  align-items: start;
-}
-
-#newPageSection[style*="display: block"] {
-  display: grid !important;
-}
-
-#newPageSection .form-group:nth-child(1),
-#newPageSection .form-group:nth-child(2) {
-  grid-column: 2;
-}
-
-#pagePreviewSection {
-  grid-column: 1;
-  grid-row: 1 / 3;
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-  border-top: none !important;
 }
 
 /* Wiki Settings Container with Live Preview */
