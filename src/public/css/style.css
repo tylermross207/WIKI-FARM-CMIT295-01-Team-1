@@ -495,11 +495,11 @@ main {
 /* Create Wiki Container with Live Preview */
 .create-wiki-container {
   display: grid;
-  grid-template-columns: 350px 1fr;
+  grid-template-columns: 350px 1fr 350px;
   gap: 2rem;
   margin: 0 auto;
   padding: 0 1rem;
-  max-width: 1400px;
+  max-width: 1600px;
 }
 
 .form-section {
@@ -517,9 +517,10 @@ main {
 
 /* Container for heading, alerts, and form section */
 .form-container {
-  margin: 3rem auto;
-  padding: 0 1rem;
-  max-width: 1200px;
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+  grid-column: 2;
 }
 
 .form-container h1 {
@@ -532,21 +533,26 @@ main {
   margin-bottom: 2rem;
 }
 
-/* When preview is visible, create side-by-side layout for form-section */
+/* Form section styling */
+.form-section {
+  background: var(--white);
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
 .form-section.with-preview {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 3.5rem;
-  align-items: start;
+  display: block;
 }
 
 .form-section.with-preview form {
-  grid-column: 1;
-  grid-row: 1;
+  grid-column: auto;
+  grid-row: auto;
 }
 
 #pagePreviewContainer {
   display: none;
+  grid-column: 3;
 }
 
 #newPageFields {
@@ -557,15 +563,17 @@ main {
   display: block;
 }
 
-.form-section.with-preview #pagePreviewContainer {
+.create-wiki-container:has(.form-section.with-preview) #pagePreviewContainer {
   display: block;
-  grid-column: 2;
-  grid-row: 1;
 }
 
 .page-preview-card {
   position: sticky;
   top: 100px;
+  background: var(--white);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 
 .page-preview-card h2 {
