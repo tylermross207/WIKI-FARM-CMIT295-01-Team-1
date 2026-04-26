@@ -91,7 +91,71 @@ router.post('/create', upload.single('wiki_image'), async (req, res) => {
   // Handle unauthenticated users - require username and email
   let userId = req.session.user?.id;
 
-  // Only check username/email if user is NOT logged in
+  // VALIDATE ALL INPUTS FIRST before creating anything
+  
+  // Page option validation (required first before other validations)
+  if (!sanitizedPageOption || (sanitizedPageOption !== 'new' && sanitizedPageOption !== 'home')) {
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
+    return res.render('wiki/create', { error: 'You must select a page option (Create new or use default home page)', user: req.session.user });
+  }
+
+  // If creating new page, validate title
+  if (sanitizedPageOption === 'new' && !sanitizedFirstPageTitle) {
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
+    return res.render('wiki/create', { error: 'Please enter a title for the new page', user: req.session.user });
+  }
+
+  // Check for suspicious input patterns
+  if (isSuspiciousInput(sanitizedName) || isSuspiciousInput(sanitizedDescription) || isSuspiciousInput(sanitizedFirstPageTitle)) {
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
+    return res.render('wiki/create', { error: 'Input contains suspicious patterns. Please remove any HTML, JavaScript, or SQL keywords.', user: req.session.user });
+  }
+
+  // Wiki name and slug validation
+  if (!sanitizedName || !sanitizedSlug) {
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
+    return res.render('wiki/create', { error: 'Name and slug are required', user: req.session.user });
+  }
+
+  if (sanitizedName.length < 3) {
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
+    return res.render('wiki/create', { error: 'Wiki name must be at least 3 characters', user: req.session.user });
+  }
+
+  if (!/^[a-z0-9-]+$/.test(sanitizedSlug)) {
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
+    return res.render('wiki/create', { error: 'Slug can only contain lowercase letters, numbers, and hyphens', user: req.session.user });
+  }
+
+  if (sanitizedSlug.length < 3) {
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
+    return res.render('wiki/create', { error: 'Slug must be at least 3 characters', user: req.session.user });
+  }
+
+  // Check if slug exists
+  const existingWiki = db.prepare('SELECT id FROM wikis WHERE slug = ?').get(sanitizedSlug);
+  if (existingWiki) {
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
+    return res.render('wiki/create', { error: 'A wiki with this slug already exists', user: req.session.user });
+  }
+
+  // User/account validation - only if not authenticated
   if (!userId) {
     // Unauthenticated user MUST provide username and email
     if (!sanitizedUsername || !sanitizedEmail) {
@@ -136,7 +200,7 @@ router.post('/create', upload.single('wiki_image'), async (req, res) => {
       return res.render('wiki/create', { error: 'This email is already registered', user: req.session.user });
     }
 
-    // Create a temporary account for the user
+    // All validations passed - create the user account
     try {
       const hashedPassword = await bcrypt.hash('TempPassword123!', 10);
       const result = db.prepare(`
@@ -160,69 +224,6 @@ router.post('/create', upload.single('wiki_image'), async (req, res) => {
       console.error('User creation error:', err);
       return res.render('wiki/create', { error: 'Failed to create user account: ' + err.message, user: req.session.user });
     }
-  }
-
-  // Validate page option is selected
-  if (!sanitizedPageOption || (sanitizedPageOption !== 'new' && sanitizedPageOption !== 'home')) {
-    if (req.file) {
-      fs.unlinkSync(req.file.path);
-    }
-    return res.render('wiki/create', { error: 'You must select a page option (Create new or use default home page)', user: req.session.user });
-  }
-
-  // If creating new page, validate title
-  if (sanitizedPageOption === 'new' && !sanitizedFirstPageTitle) {
-    if (req.file) {
-      fs.unlinkSync(req.file.path);
-    }
-    return res.render('wiki/create', { error: 'Please enter a title for the new page', user: req.session.user });
-  }
-
-  // Check for suspicious input patterns
-  if (isSuspiciousInput(sanitizedName) || isSuspiciousInput(sanitizedDescription) || isSuspiciousInput(sanitizedFirstPageTitle)) {
-    // Delete uploaded file if it exists
-    if (req.file) {
-      fs.unlinkSync(req.file.path);
-    }
-    return res.render('wiki/create', { error: 'Input contains suspicious patterns. Please remove any HTML, JavaScript, or SQL keywords.', user: req.session.user });
-  }
-
-  // Validation
-  if (!sanitizedName || !sanitizedSlug) {
-    if (req.file) {
-      fs.unlinkSync(req.file.path);
-    }
-    return res.render('wiki/create', { error: 'Name and slug are required', user: req.session.user });
-  }
-
-  if (sanitizedName.length < 3) {
-    if (req.file) {
-      fs.unlinkSync(req.file.path);
-    }
-    return res.render('wiki/create', { error: 'Wiki name must be at least 3 characters', user: req.session.user });
-  }
-
-  if (!/^[a-z0-9-]+$/.test(sanitizedSlug)) {
-    if (req.file) {
-      fs.unlinkSync(req.file.path);
-    }
-    return res.render('wiki/create', { error: 'Slug can only contain lowercase letters, numbers, and hyphens', user: req.session.user });
-  }
-
-  if (sanitizedSlug.length < 3) {
-    if (req.file) {
-      fs.unlinkSync(req.file.path);
-    }
-    return res.render('wiki/create', { error: 'Slug must be at least 3 characters', user: req.session.user });
-  }
-
-  // Check if slug exists
-  const existingWiki = db.prepare('SELECT id FROM wikis WHERE slug = ?').get(sanitizedSlug);
-  if (existingWiki) {
-    if (req.file) {
-      fs.unlinkSync(req.file.path);
-    }
-    return res.render('wiki/create', { error: 'A wiki with this slug already exists', user: req.session.user });
   }
 
   try {
