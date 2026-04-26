@@ -44,8 +44,8 @@
     </div>
   </div>
 
-  <!-- Form on the RIGHT side -->
-  <div class="form-section">
+  <!-- Form Container -->
+  <div class="form-container">
     <h1>Create a New Wiki</h1>
     
     <% if (error) { %>
@@ -58,7 +58,9 @@
       </div>
     <% } %>
 
-    <form method="POST" action="/w/create" class="wiki-form" id="wikiForm" enctype="multipart/form-data">
+    <!-- Form on the LEFT, Preview on the RIGHT -->
+    <div class="form-section">
+      <form method="POST" action="/w/create" class="wiki-form" id="wikiForm" enctype="multipart/form-data">
       <% if (!user) { %>
         <h2 style="font-size: 1.1rem; margin: 1rem 0 1.5rem;">Your Account</h2>
         

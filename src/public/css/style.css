@@ -509,12 +509,30 @@ main {
   box-shadow: var(--shadow);
 }
 
-/* Normal layout - form section is just a regular container */
-.form-section {
-  max-width: 100%;
+.form-section form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-/* When preview is visible, create side-by-side layout */
+/* Container for heading, alerts, and form section */
+.form-container {
+  margin: 2rem auto;
+  padding: 0 1rem;
+  max-width: 1000px;
+}
+
+.form-container h1 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+}
+
+.form-container .alert {
+  margin-bottom: 1.5rem;
+}
+
+/* When preview is visible, create side-by-side layout for form-section */
 .form-section.with-preview {
   display: grid;
   grid-template-columns: 1fr 350px;
@@ -525,7 +543,6 @@ main {
 .form-section.with-preview form {
   grid-column: 1;
   grid-row: 1;
-  order: 1;
 }
 
 #pagePreviewContainer {
