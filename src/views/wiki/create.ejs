@@ -144,6 +144,19 @@
         </select>
       </div>
 
+      <!-- New Page Fields - INSIDE the form so they are submitted -->
+      <div id="newPageFields" style="display: none;">
+        <div class="form-group">
+          <label for="firstPageTitle">New Page Title</label>
+          <input type="text" id="firstPageTitle" name="firstPageTitle" placeholder="e.g., Introduction">
+        </div>
+
+        <div class="form-group">
+          <label for="firstPageContent">New Page Content</label>
+          <textarea id="firstPageContent" name="firstPageContent" rows="8" placeholder="Write your page content here... (Markdown supported)"></textarea>
+        </div>
+      </div>
+
       <div class="form-actions">
         <a href="/" class="btn">Cancel</a>
         <button type="submit" class="btn btn-primary">Create Wiki</button>
@@ -152,21 +165,9 @@
   </div>
 </div>
 
-<!-- Create New Page Section - Outside the container so it can be full width -->
+<!-- Create New Page Section - With preview displayed outside the form -->
 <div id="newPageSection" style="display: none;" class="new-page-layout">
-  <div id="newPageForm" class="new-page-form">
-    <div class="form-group">
-      <label for="firstPageTitle">New Page Title</label>
-      <input type="text" id="firstPageTitle" name="firstPageTitle" placeholder="e.g., Introduction">
-    </div>
-
-    <div class="form-group">
-      <label for="firstPageContent">New Page Content</label>
-      <textarea id="firstPageContent" name="firstPageContent" rows="8" placeholder="Write your page content here... (Markdown supported)"></textarea>
-    </div>
-  </div>
-
-  <!-- Page Preview Section (shown next to form when creating new page) -->
+  <!-- This div now only contains the preview, form fields are inside the form above -->
   <div id="pagePreviewSection" class="new-page-preview">
     <h3>First Page Preview</h3>
     <div class="preview-card">
@@ -281,18 +282,21 @@
   // Page option management
   function updatePageFields() {
     const pageOption = document.getElementById('pageOption').value;
+    const newPageFields = document.getElementById('newPageFields');
     const newPageSection = document.getElementById('newPageSection');
     const pagePreviewSection = document.getElementById('pagePreviewSection');
     const firstPageTitle = document.getElementById('firstPageTitle');
     const firstPageContent = document.getElementById('firstPageContent');
 
     if (pageOption === 'new') {
+      newPageFields.style.display = 'block';
       newPageSection.style.display = 'block';
       pagePreviewSection.style.display = 'block';
       firstPageTitle.required = true;
       firstPageContent.required = true;
       updatePagePreview();
     } else {
+      newPageFields.style.display = 'none';
       newPageSection.style.display = 'none';
       pagePreviewSection.style.display = 'none';
       firstPageTitle.required = false;
