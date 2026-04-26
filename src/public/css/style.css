@@ -509,16 +509,17 @@ main {
   box-shadow: var(--shadow);
 }
 
-/* When page preview is visible, make form-section a grid */
+/* When page preview is visible, show it beside the form */
 .form-section.with-preview {
-  display: grid;
-  grid-template-columns: 350px 1fr;
+  display: flex;
+  flex-direction: row;
   gap: 2rem;
-  align-items: start;
+  align-items: flex-start;
 }
 
 .form-section.with-preview form {
-  grid-column: 2;
+  flex: 1;
+  min-width: 0;
 }
 
 #pagePreviewContainer {
@@ -534,10 +535,9 @@ main {
 }
 
 .form-section.with-preview #pagePreviewContainer {
-  display: grid;
-  grid-column: 1;
-  grid-row: 1;
-  gap: 1rem;
+  display: block;
+  flex: 0 0 350px;
+  min-width: 350px;
 }
 
 .page-preview-card {
