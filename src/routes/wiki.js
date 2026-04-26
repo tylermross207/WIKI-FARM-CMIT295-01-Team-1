@@ -91,10 +91,18 @@ router.post('/create', upload.single('wiki_image'), async (req, res) => {
   // Handle unauthenticated users - require username and email
   let userId = req.session.user?.id;
 
+  // Debug logging
+  console.log('[Wiki Create] req.session.user:', req.session.user);
+  console.log('[Wiki Create] userId:', userId, '| Type:', typeof userId);
+  console.log('[Wiki Create] Form username:', username, '| Form email:', email);
+  console.log('[Wiki Create] Sanitized username:', sanitizedUsername, '| Sanitized email:', sanitizedEmail);
+
   // Only check username/email if user is NOT logged in
   if (!userId) {
+    console.log('[Wiki Create] No userId detected - checking username/email from form');
     // Unauthenticated user MUST provide username and email
     if (!sanitizedUsername || !sanitizedEmail) {
+      console.log('[Wiki Create] Username or email missing - returning error');
       if (req.file) {
         fs.unlinkSync(req.file.path);
       }
@@ -160,6 +168,8 @@ router.post('/create', upload.single('wiki_image'), async (req, res) => {
       console.error('User creation error:', err);
       return res.render('wiki/create', { error: 'Failed to create user account: ' + err.message, user: req.session.user });
     }
+  } else {
+    console.log('[Wiki Create] User IS logged in (userId=' + userId + ') - skipping username/email validation');
   }
 
   // Validate page option is selected
