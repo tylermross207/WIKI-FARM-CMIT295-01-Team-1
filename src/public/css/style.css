@@ -509,17 +509,23 @@ main {
   box-shadow: var(--shadow);
 }
 
-/* When page preview is visible, show it beside the form */
+/* Normal layout - form section is just a regular container */
+.form-section {
+  max-width: 100%;
+}
+
+/* When preview is visible, create side-by-side layout */
 .form-section.with-preview {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr 350px;
   gap: 2rem;
-  align-items: flex-start;
+  align-items: start;
 }
 
 .form-section.with-preview form {
-  flex: 1;
-  min-width: 0;
+  grid-column: 1;
+  grid-row: 1;
+  order: 1;
 }
 
 #pagePreviewContainer {
@@ -536,8 +542,8 @@ main {
 
 .form-section.with-preview #pagePreviewContainer {
   display: block;
-  flex: 0 0 350px;
-  min-width: 350px;
+  grid-column: 2;
+  grid-row: 1;
 }
 
 .page-preview-card {
