@@ -410,12 +410,12 @@ main {
 
 /* Forms */
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.75rem;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
   font-weight: 500;
 }
 
@@ -504,7 +504,7 @@ main {
 
 .form-section {
   background: var(--white);
-  padding: 2rem;
+  padding: 3rem;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
@@ -512,31 +512,31 @@ main {
 .form-section form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
 /* Container for heading, alerts, and form section */
 .form-container {
-  margin: 2rem auto;
+  margin: 3rem auto;
   padding: 0 1rem;
-  max-width: 1000px;
+  max-width: 1200px;
 }
 
 .form-container h1 {
   font-size: 2rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   color: var(--text);
 }
 
 .form-container .alert {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 /* When preview is visible, create side-by-side layout for form-section */
 .form-section.with-preview {
   display: grid;
-  grid-template-columns: 1fr 350px;
-  gap: 2rem;
+  grid-template-columns: 1fr 380px;
+  gap: 3.5rem;
   align-items: start;
 }
 
