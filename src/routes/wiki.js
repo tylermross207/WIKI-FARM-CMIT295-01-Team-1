@@ -90,7 +90,7 @@ router.post('/create', upload.single('wiki_image'), async (req, res) => {
 
   // Handle unauthenticated users - require username and email
   let userId = req.session.user?.id;
-  
+
   // Only check username/email if user is NOT logged in
   if (!userId) {
     // Unauthenticated user MUST provide username and email
