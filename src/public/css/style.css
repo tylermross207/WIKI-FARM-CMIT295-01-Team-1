@@ -521,7 +521,7 @@ main {
 /* New Page Section with Preview - Side by Side Layout */
 .new-page-layout {
   display: grid !important;
-  grid-template-columns: 1fr 350px !important;
+  grid-template-columns: 350px 1fr !important;
   gap: 2rem !important;
   align-items: start !important;
   margin: 0 auto !important;
@@ -531,7 +531,7 @@ main {
 }
 
 .new-page-form {
-  grid-column: 1 !important;
+  grid-column: 2 !important;
   background: var(--white);
   padding: 2rem;
   border-radius: var(--radius);
@@ -539,7 +539,7 @@ main {
 }
 
 .new-page-preview {
-  grid-column: 2 !important;
+  grid-column: 1 !important;
   position: sticky !important;
   top: 100px !important;
 }
@@ -551,7 +551,7 @@ main {
 
 #newPageSection {
   display: none !important;
-  grid-template-columns: 1fr 350px;
+  grid-template-columns: 350px 1fr;
   gap: 2rem;
   align-items: start;
 }
@@ -562,11 +562,11 @@ main {
 
 #newPageSection .form-group:nth-child(1),
 #newPageSection .form-group:nth-child(2) {
-  grid-column: 1;
+  grid-column: 2;
 }
 
 #pagePreviewSection {
-  grid-column: 2;
+  grid-column: 1;
   grid-row: 1 / 3;
   margin-top: 0 !important;
   padding-top: 0 !important;
