@@ -536,9 +536,16 @@ main {
 /* Form section styling */
 .form-section {
   background: var(--white);
-  padding: 0;
-  border-radius: 0;
-  box-shadow: none;
+  padding: 3rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  grid-column: 2;
+}
+
+.form-section form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .form-section.with-preview {
@@ -553,6 +560,10 @@ main {
 #pagePreviewContainer {
   display: none;
   grid-column: 3;
+  background: var(--white);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 
 #newPageFields {
