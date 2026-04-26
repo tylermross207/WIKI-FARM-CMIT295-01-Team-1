@@ -550,10 +550,14 @@ main {
 }
 
 #newPageSection {
-  display: grid;
+  display: none !important;
   grid-template-columns: 1fr 350px;
   gap: 2rem;
   align-items: start;
+}
+
+#newPageSection[style*="display: block"] {
+  display: grid !important;
 }
 
 #newPageSection .form-group:nth-child(1),
