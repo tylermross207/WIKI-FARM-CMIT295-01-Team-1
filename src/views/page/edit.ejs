@@ -77,7 +77,20 @@
     const content = contentInput.value;
     
     previewTitle.textContent = stripHtmlTags(title) || 'Page Title';
-    previewContent.textContent = stripHtmlTags(content) || 'Page content will appear here';
+    
+    // Simple markdown rendering for preview (bold, italic, headings, lists)
+    let renderedContent = stripHtmlTags(content) || 'Page content will appear here';
+    
+    // Convert markdown-style formatting for display
+    renderedContent = renderedContent
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // **bold**
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')              // *italic*
+      .replace(/^### (.*?)$/gm, '<strong style="font-size: 0.9em; display: block; margin-top: 8px;">$1</strong>')  // ### heading
+      .replace(/^## (.*?)$/gm, '<strong style="font-size: 1.1em; display: block; margin-top: 10px;">$1</strong>')   // ## heading
+      .replace(/^# (.*?)$/gm, '<strong style="font-size: 1.3em; display: block; margin-top: 12px;">$1</strong>')    // # heading
+      .replace(/\n/g, '<br>');  // Line breaks
+    
+    previewContent.innerHTML = renderedContent;
   }
 
   // Add event listeners

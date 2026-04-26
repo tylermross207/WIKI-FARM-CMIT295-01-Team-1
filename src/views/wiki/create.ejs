@@ -308,7 +308,20 @@
     const pagePreviewContent = document.getElementById('pagePreviewContent');
 
     pagePreviewTitle.textContent = stripHtmlTags(pageTitle) || 'Your Page Title';
-    pagePreviewContent.textContent = stripHtmlTags(pageContent) || 'Your page content will appear here';
+    
+    // Simple markdown rendering for preview (bold, italic, headings, lists)
+    let renderedContent = stripHtmlTags(pageContent) || 'Your page content will appear here';
+    
+    // Convert markdown-style formatting for display
+    renderedContent = renderedContent
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // **bold**
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')              // *italic*
+      .replace(/^### (.*?)$/gm, '<strong style="font-size: 0.9em; display: block; margin-top: 8px;">$1</strong>')  // ### heading
+      .replace(/^## (.*?)$/gm, '<strong style="font-size: 1.1em; display: block; margin-top: 10px;">$1</strong>')   // ## heading
+      .replace(/^# (.*?)$/gm, '<strong style="font-size: 1.3em; display: block; margin-top: 12px;">$1</strong>')    // # heading
+      .replace(/\n/g, '<br>');  // Line breaks
+    
+    pagePreviewContent.innerHTML = renderedContent;
   }
 
   // Add event listeners for page preview
@@ -317,6 +330,24 @@
 
   // Form validation
   document.getElementById('wikiForm').addEventListener('submit', function(e) {
+    // First check page option
+    const pageOption = document.getElementById('pageOption').value;
+    if (!pageOption) {
+      e.preventDefault();
+      alert('Please select a page option (Create new or use default home page)');
+      return false;
+    }
+
+    // Then check if new page option requires title
+    if (pageOption === 'new') {
+      const firstPageTitle = document.getElementById('firstPageTitle').value.trim();
+      if (!firstPageTitle) {
+        e.preventDefault();
+        alert('Please enter a title for the new page');
+        return false;
+      }
+    }
+
     // Check if username field exists (user not logged in)
     const usernameField = document.getElementById('username');
     
@@ -346,22 +377,6 @@
       if (!emailRegex.test(email)) {
         e.preventDefault();
         alert('Please enter a valid email address');
-        return false;
-      }
-    }
-
-    const pageOption = document.getElementById('pageOption').value;
-    if (!pageOption) {
-      e.preventDefault();
-      alert('Please select a page option (Create new or use default home page)');
-      return false;
-    }
-
-    if (pageOption === 'new') {
-      const firstPageTitle = document.getElementById('firstPageTitle').value.trim();
-      if (!firstPageTitle) {
-        e.preventDefault();
-        alert('Please enter a title for the new page');
         return false;
       }
     }

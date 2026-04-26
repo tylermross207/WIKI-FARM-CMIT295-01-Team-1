@@ -105,16 +105,8 @@
 ### Member 6 – Tyler Ross (Project Lead)
 
 **Contributions:**
-- **Core Development:** Implemented multiple major features including:
-  - Dark mode and theme selector system with localStorage persistence
-  - Fixed Create Wiki button visibility across all pages
-  - Implemented user account auto-creation for wiki creation flow
-  - Added cache-busting headers and cookie clearing for fresh content
-  - Created live page preview for wiki and page creation
-  - Implemented auto-page creation on first access with edit permissions
-  - Added side-by-side layout for new page form and preview
-  - Implemented live preview for wiki settings page
-  - Created comprehensive page editor with markdown support
+- **Core Development:** 
+
 
 - **Technical Architecture:**
   - Designed and implemented multi-tenant wiki architecture
