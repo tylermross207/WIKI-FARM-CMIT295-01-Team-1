@@ -495,11 +495,11 @@ main {
 /* Create Wiki Container with Live Preview */
 .create-wiki-container {
   display: grid;
-  grid-template-columns: 350px 1fr 350px;
+  grid-template-columns: 350px 2fr 350px;
   gap: 2rem;
   margin: 0 auto;
   padding: 0 1rem;
-  max-width: 1600px;
+  max-width: 1800px;
 }
 
 .form-section {
