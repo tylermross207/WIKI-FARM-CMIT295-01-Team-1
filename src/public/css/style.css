@@ -521,13 +521,15 @@ main {
   grid-column: 2;
 }
 
-.form-section.with-preview #pagePreviewContainer {
-  grid-column: 1;
-  grid-row: 1;
-}
-
 #pagePreviewContainer {
   display: none;
+}
+
+.form-section.with-preview #pagePreviewContainer {
+  display: grid;
+  grid-column: 1;
+  grid-row: 1;
+  gap: 1rem;
 }
 
 .page-preview-card {
