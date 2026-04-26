@@ -601,6 +601,8 @@ main {
 .preview-section {
   position: sticky;
   top: 2rem;
+  display: block;
+  visibility: visible;
 }
 
 /* Wiki Settings Container with Live Preview */
@@ -737,14 +739,15 @@ main {
   font-weight: 500;
 }
 
-/* Responsive - Stack on smaller screens */
+/* Responsive - Keep preview sections visible */
 @media (max-width: 1024px) {
   .create-wiki-container {
-    grid-template-columns: 1fr;
+    grid-template-columns: 320px 1fr 320px;
   }
 
   .preview-section {
-    position: static;
+    position: sticky;
+    display: block;
   }
 }
 
