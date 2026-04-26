@@ -255,7 +255,7 @@ router.post('/create', upload.single('wiki_image'), async (req, res) => {
       db.prepare(`
         INSERT INTO pages (wiki_id, slug, title, content, created_by)
         VALUES (?, ?, ?, ?, ?)
-      `).run(wikiId, firstPageSlug, sanitizedFirstPageTitle, sanitizedFirstPageContent, req.session.user.id);
+      `).run(wikiId, firstPageSlug, sanitizedFirstPageTitle, sanitizedFirstPageContent, userId);
 
       // Redirect to the new page
       res.redirect(`/w/${sanitizedSlug}/${firstPageSlug}`);
@@ -268,8 +268,8 @@ router.post('/create', upload.single('wiki_image'), async (req, res) => {
     if (req.file) {
       fs.unlinkSync(req.file.path);
     }
-    console.error(err);
-    res.render('wiki/create', { error: 'Failed to create wiki' });
+    console.error('Wiki creation error:', err);
+    res.render('wiki/create', { error: 'Failed to create wiki: ' + err.message, user: req.session.user });
   }
 });
 
