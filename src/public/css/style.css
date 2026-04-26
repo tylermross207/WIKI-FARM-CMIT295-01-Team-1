@@ -525,6 +525,14 @@ main {
   display: none;
 }
 
+#newPageFields {
+  display: none;
+}
+
+.form-section.with-preview #newPageFields {
+  display: block;
+}
+
 .form-section.with-preview #pagePreviewContainer {
   display: grid;
   grid-column: 1;

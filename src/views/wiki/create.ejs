@@ -145,7 +145,7 @@
       </div>
 
       <!-- New Page Fields - INSIDE the form so they are submitted -->
-      <div id="newPageFields" style="display: none;">
+      <div id="newPageFields">
         <div class="form-group">
           <label for="firstPageTitle">New Page Title</label>
           <input type="text" id="firstPageTitle" name="firstPageTitle" placeholder="e.g., Introduction">
@@ -165,7 +165,7 @@
   </div>
 
   <!-- Page Preview Section - shown beside form when creating new page -->
-  <div id="pagePreviewContainer" style="display: none;">
+  <div id="pagePreviewContainer">
     <div id="pagePreviewSection" class="page-preview-card">
       <h2>Page Preview</h2>
       <div class="preview-card">
@@ -281,22 +281,16 @@
   // Page option management
   function updatePageFields() {
     const pageOption = document.getElementById('pageOption').value;
-    const newPageFields = document.getElementById('newPageFields');
-    const pagePreviewContainer = document.getElementById('pagePreviewContainer');
     const formSection = document.querySelector('.form-section');
     const firstPageTitle = document.getElementById('firstPageTitle');
     const firstPageContent = document.getElementById('firstPageContent');
 
     if (pageOption === 'new') {
-      newPageFields.style.display = 'block';
-      pagePreviewContainer.style.display = 'block';
       formSection.classList.add('with-preview');
       firstPageTitle.required = true;
       firstPageContent.required = true;
       updatePagePreview();
     } else {
-      newPageFields.style.display = 'none';
-      pagePreviewContainer.style.display = 'none';
       formSection.classList.remove('with-preview');
       firstPageTitle.required = false;
       firstPageContent.required = false;
