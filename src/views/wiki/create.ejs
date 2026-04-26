@@ -328,6 +328,11 @@
   document.getElementById('firstPageTitle').addEventListener('input', updatePagePreview);
   document.getElementById('firstPageContent').addEventListener('input', updatePagePreview);
 
+  // Initialize page fields visibility on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    updatePageFields();
+  });
+
   // Form validation
   document.getElementById('wikiForm').addEventListener('submit', function(e) {
     // First check page option
